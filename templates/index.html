@@ -1,0 +1,1053 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- =========================================================================
+     1. HERO SECTION (#home)
+     ========================================================================= -->
+<section id="home" class="relative overflow-hidden pt-12 pb-20 sm:pt-16 sm:pb-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            <!-- Left Column: Copy & CTAs -->
+            <div class="lg:col-span-7 space-y-6 text-left">
+                <!-- Availability Badge -->
+                <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-accent-500/30 bg-accent-500/10 text-xs font-mono text-accent-300">
+                    <span class="pulsing-dot"></span>
+                    <span>{{ personal.status_badge }}</span>
+                </div>
+
+                <!-- Main Headline -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1]">
+                    Building Smarter <br>
+                    <span class="gradient-text">Software with AI</span>
+                </h1>
+
+                <!-- Subtitle / Value summary -->
+                <p class="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl">
+                    {{ personal.bio_summary }}
+                </p>
+
+                <!-- Experience highlight -->
+                <p class="text-sm sm:text-base text-gray-400 max-w-xl">
+                    {{ personal.experience_summary }}
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                    <a href="#contact" class="btn-primary">
+                        <span>Discuss Your Project</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#solutions" class="btn-secondary">
+                        <span>Explore AI Solutions</span>
+                        <i data-lucide="layers" class="w-4 h-4 text-accent-400"></i>
+                    </a>
+                </div>
+
+                <!-- Core Technologies Ticker -->
+                <div class="pt-6 border-t border-ink-600/50">
+                    <p class="text-xs uppercase font-mono tracking-wider text-gray-500 mb-3">Core Expertise</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tech-badge">.NET Core</span>
+                        <span class="tech-badge">C#</span>
+                        <span class="tech-badge">ASP.NET Web API</span>
+                        <span class="tech-badge">Python / FastAPI</span>
+                        <span class="tech-badge">OpenAI & LLMs</span>
+                        <span class="tech-badge">RAG & Vector Search</span>
+                        <span class="tech-badge">AI Agents</span>
+                        <span class="tech-badge">SQL Server</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Interactive Terminal Preview -->
+            <div class="lg:col-span-5">
+                <div class="terminal-window p-5 relative border border-ink-600/70 shadow-2xl">
+                    <!-- Window Controls -->
+                    <div class="flex items-center justify-between pb-3 border-b border-ink-700/60 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="h-3 w-3 rounded-full bg-red-500/80 inline-block"></span>
+                            <span class="h-3 w-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                            <span class="h-3 w-3 rounded-full bg-green-500/80 inline-block"></span>
+                        </div>
+                        <span class="font-mono text-xs text-gray-500">ai-bridge-service.cs</span>
+                        <div class="flex items-center gap-1.5 text-xs text-accent-400 font-mono">
+                            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+                            <span>Online</span>
+                        </div>
+                    </div>
+
+                    <!-- Code & Pipeline Simulation -->
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="text-gray-500">// Step 1: Connect to existing .NET backend</div>
+                        <div class="text-purple-400">var <span class="text-white">existingDb</span> = <span class="text-cyan-400">new</span> SqlServerConnection(config);</div>
+                        
+                        <div class="text-gray-500 pt-1">// Step 2: Initialize RAG Context & Agent</div>
+                        <div class="text-purple-400">var <span class="text-white">agent</span> = <span class="text-cyan-400">new</span> IntelligentAgent(</div>
+                        <div class="pl-4 text-gray-300">llm: <span class="text-green-300">"gpt-4o"</span>,</div>
+                        <div class="pl-4 text-gray-300">tools: existingDb.GetSchemaTools(),</div>
+                        <div class="pl-4 text-gray-300">ragStore: vectorDb.Embeddings</div>
+                        <div class="text-purple-400">);</div>
+
+                        <div class="text-gray-500 pt-1">// Step 3: Natural language request to API action</div>
+                        <div class="bg-ink-800/80 p-3 rounded-lg border border-accent-500/30 text-gray-200 mt-2">
+                            <div class="flex items-center gap-2 text-accent-400 font-semibold mb-1">
+                                <i data-lucide="bot" class="w-4 h-4"></i>
+                                <span>AI Agent Response:</span>
+                            </div>
+                            <p class="text-[11px] text-gray-300">
+                                "Found 12 pending invoices matching Q3. Auto-drafted summary and generated executive report via .NET Web API."
+                            </p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 text-[11px] text-gray-500">
+                            <span>Status: <span class="text-green-400">200 OK</span></span>
+                            <span>Latency: <span class="text-accent-400">320ms</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     2. VALUE PROPOSITION SECTION
+     ========================================================================= -->
+<section class="py-20 relative bg-ink-950/60 border-t border-b border-ink-600/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                {{ value_prop.eyebrow }}
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                {{ value_prop.title }}
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                {{ value_prop.subtitle }}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for pillar in value_prop.pillars %}
+            <div class="card-surface rounded-2xl p-8 relative overflow-hidden group">
+                <div class="text-5xl font-mono font-bold text-ink-500/20 absolute -right-2 -top-2 group-hover:text-accent-500/15 transition-colors">
+                    {{ pillar.step }}
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300 mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="{{ pillar.icon }}" class="w-6 h-6"></i>
+                    </span>
+                    <h3 class="text-xl font-bold text-white mb-3">
+                        <span class="font-mono text-accent-400 text-sm block mb-1">Step {{ pillar.step }}</span>
+                        {{ pillar.title }}
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        {{ pillar.desc }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     3. AI SOLUTIONS SECTION (#solutions)
+     ========================================================================= -->
+<section id="solutions" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                AI Solutions
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                AI Solutions I Can Build
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                Practical AI integration services designed to work with your existing software stack.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for solution in solutions %}
+            <div class="card-surface rounded-2xl p-7 flex flex-col justify-between group">
+                <div>
+                    <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300 mb-5 group-hover:scale-110 transition-transform">
+                        <i data-lucide="{{ solution.icon }}" class="w-6 h-6"></i>
+                    </span>
+                    <h3 class="text-xl font-semibold text-white mb-2.5">
+                        {{ solution.title }}
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">
+                        {{ solution.desc }}
+                    </p>
+                </div>
+                
+                <div>
+                    <div class="flex flex-wrap gap-1.5 mb-5">
+                        {% for tag in solution.tags %}
+                        <span class="tech-badge">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="#contact" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-400 hover:text-accent-300 transition-colors group-hover:translate-x-1 duration-200">
+                        <span>Discuss Implementation</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     4. EXISTING APPLICATION AI INTEGRATION ARCHITECTURE (#architecture)
+     ========================================================================= -->
+<section id="architecture" class="py-24 bg-ink-950/70 border-t border-b border-ink-600/40 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+                Existing Application AI Integration
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                Have an Existing .NET Application?
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                You don't need to replace your existing application. AI can be introduced as an additional intelligent layer.
+            </p>
+        </div>
+
+        <!-- 3-Tier Interactive Architecture Flow -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            <div class="arch-card flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300">
+                            <i data-lucide="terminal" class="w-5 h-5"></i>
+                        </span>
+                        <span class="font-mono text-xs text-gray-500">Tier 1</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">
+                        1. Existing .NET Application
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        C#, ASP.NET, WinForms, Web APIs, SQL Server, and business logic already in production.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="arch-card flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300">
+                            <i data-lucide="network" class="w-5 h-5"></i>
+                        </span>
+                        <span class="font-mono text-xs text-gray-500">Tier 2</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">
+                        2. AI Integration Layer
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        FastAPI / Middleware gateway handling secure prompt management, token optimization, and API orchestration.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="arch-card flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300">
+                            <i data-lucide="brain" class="w-5 h-5"></i>
+                        </span>
+                        <span class="font-mono text-xs text-gray-500">Tier 3</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">
+                        3. LLM & Intelligence
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        OpenAI, Claude, RAG vector retrieval, and autonomous agents executing tool calls.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outcome Banner -->
+        <div class="mt-12 rounded-2xl border border-accent-500/30 bg-gradient-to-r from-accent-500/10 via-ink-800/60 to-cyan-500/10 p-8 text-center">
+            <div class="inline-flex items-center gap-2 text-accent-300 font-semibold mb-2">
+                <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i>
+                <span class="text-lg">The Result: Your existing software — now intelligent.</span>
+            </div>
+            <p class="text-sm text-gray-400 max-w-xl mx-auto">
+                No risky rebuilds. Zero database migrations required. Your proven business software retains its stability while gaining cutting-edge AI powers.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-2">
+                <span class="tech-badge bg-ink-950/80">.NET Application</span>
+                <span class="tech-badge bg-ink-950/80">OpenAI</span>
+                <span class="tech-badge bg-ink-950/80">Existing Database</span>
+                <span class="tech-badge bg-ink-950/80">REST APIs</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     5. INTERACTIVE AI ARCHITECTURE ADVISOR DEMO (#advisor)
+     ========================================================================= -->
+<section id="advisor" class="py-24 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                Interactive Tool
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                AI Integration Feasibility Advisor
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                Test how AI can plug into your current stack. Select your technologies below to generate an immediate technical recommendation.
+            </p>
+        </div>
+
+        <div class="max-w-4xl mx-auto card-surface rounded-2xl p-6 sm:p-10 border border-ink-600/70">
+            <form id="advisor-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div>
+                    <label for="adv-tech" class="block text-xs font-mono uppercase text-gray-400 mb-2">Existing Tech Stack</label>
+                    <select id="adv-tech" class="w-full bg-ink-700/50 border border-ink-500/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-accent-500">
+                        <option value=".NET Core / C#">.NET Core / C#</option>
+                        <option value="Legacy ASP.NET Framework">Legacy ASP.NET (.NET 4.8)</option>
+                        <option value="Python / Django / Flask">Python / FastAPI / Django</option>
+                        <option value="Java Spring Boot">Java / Spring Boot</option>
+                        <option value="Node.js / Express">Node.js / Express</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="adv-use-case" class="block text-xs font-mono uppercase text-gray-400 mb-2">Target AI Capability</label>
+                    <select id="adv-use-case" class="w-full bg-ink-700/50 border border-ink-500/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-accent-500">
+                        <option value="RAG Document Search">RAG Document & Knowledge Search</option>
+                        <option value="Autonomous AI Agents">Autonomous AI Agent (API Tools)</option>
+                        <option value="AI Voice Assistant">Voice AI Assistant for Support</option>
+                        <option value="ChatGPT Assistant Overlay">ChatGPT Application Assistant</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="adv-database" class="block text-xs font-mono uppercase text-gray-400 mb-2">Current Database</label>
+                    <select id="adv-database" class="w-full bg-ink-700/50 border border-ink-500/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-accent-500">
+                        <option value="SQL Server">Microsoft SQL Server</option>
+                        <option value="Oracle Database">Oracle Database</option>
+                        <option value="PostgreSQL">PostgreSQL</option>
+                        <option value="MySQL">MySQL / MariaDB</option>
+                    </select>
+                </div>
+
+                <div class="sm:col-span-3 pt-2">
+                    <button type="submit" class="w-full btn-primary py-3">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <span>Generate Architecture Recommendation</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading Spinner -->
+            <div id="advisor-loading" class="hidden text-center py-8">
+                <i data-lucide="loader-2" class="w-8 h-8 text-accent-400 animate-spin mx-auto mb-2"></i>
+                <p class="text-sm font-mono text-gray-400">Analyzing integration feasibility...</p>
+            </div>
+
+            <!-- Result Box -->
+            <div id="advisor-result" class="hidden border-t border-ink-600/50 pt-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <span class="text-xs font-mono text-accent-400 uppercase">Recommended Architecture</span>
+                        <h4 id="res-arch-title" class="text-xl font-bold text-white mt-1"></h4>
+                    </div>
+                    <div class="flex items-center gap-3 bg-ink-800/80 px-4 py-2 rounded-xl border border-ink-600/60">
+                        <div>
+                            <span class="block text-[10px] font-mono uppercase text-gray-400">Feasibility</span>
+                            <span id="res-score" class="text-lg font-bold text-green-400 font-mono"></span>
+                        </div>
+                        <div class="w-16 h-2 bg-ink-700 rounded-full overflow-hidden">
+                            <div id="res-score-bar" class="h-full bg-green-400 transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <h5 class="text-xs font-mono uppercase text-gray-400 mb-3 flex items-center gap-1.5">
+                            <i data-lucide="check-square" class="w-4 h-4 text-accent-400"></i>
+                            <span>Key Components</span>
+                        </h5>
+                        <ul id="res-components" class="space-y-2"></ul>
+                    </div>
+
+                    <div>
+                        <h5 class="text-xs font-mono uppercase text-gray-400 mb-3 flex items-center gap-1.5">
+                            <i data-lucide="git-commit" class="w-4 h-4 text-accent-400"></i>
+                            <span>Implementation Path</span>
+                        </h5>
+                        <ul id="res-steps" class="space-y-2"></ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-5 border-t border-ink-600/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono">
+                    <div class="text-gray-400 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-accent-400"></i>
+                        <span>Timeline: <strong id="res-timeline" class="text-gray-200"></strong></span>
+                    </div>
+                    <p id="res-protip" class="text-accent-300 italic max-w-md"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     6. SOFTWARE ENGINEERING EXPERIENCE (#experience)
+     ========================================================================= -->
+<section id="experience" class="py-24 bg-ink-950/60 border-t border-b border-ink-600/40 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                {{ experience.eyebrow }}
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                {{ experience.title }}
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                {{ experience.subtitle }}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Left Stat Card -->
+            <div class="lg:col-span-5 card-surface rounded-2xl p-8 border border-ink-600/70">
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 text-white font-mono text-2xl font-bold shadow-lg shadow-accent-900/40">
+                        {{ personal.avatar_letter }}
+                    </span>
+                    <div>
+                        <span class="font-mono text-sm font-semibold text-accent-400">{{ experience.years }}</span>
+                        <h3 class="text-2xl font-bold text-white">Software Development</h3>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-300 leading-relaxed mb-6">
+                    {{ experience.summary }}
+                </p>
+                <div class="pt-6 border-t border-ink-600/50">
+                    <p class="text-xs font-mono uppercase text-gray-500 mb-3">Enterprise Stack</p>
+                    <div class="flex flex-wrap gap-2">
+                        {% for badge in experience.tech_badges %}
+                        <span class="tech-badge">{{ badge }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Areas List -->
+            <div class="lg:col-span-7 space-y-4">
+                {% for area in experience.areas %}
+                <div class="card-surface rounded-xl p-5 flex items-start gap-4">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300">
+                        <i data-lucide="{{ area.icon }}" class="w-5 h-5"></i>
+                    </span>
+                    <div>
+                        <h4 class="text-base font-semibold text-white">{{ area.title }}</h4>
+                        <p class="text-sm text-gray-400 mt-1 leading-relaxed">{{ area.desc }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     7. AI PROJECTS & SOLUTIONS (#projects)
+     ========================================================================= -->
+<section id="projects" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                Projects
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                AI Projects & Solutions
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                Example projects illustrating the kind of AI integrations I build for businesses.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for project in projects %}
+            <div class="card-surface rounded-2xl p-8 flex flex-col justify-between group">
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300 group-hover:scale-110 transition-transform">
+                            <i data-lucide="{{ project.icon }}" class="w-6 h-6"></i>
+                        </span>
+                        <span class="text-xs font-mono font-semibold text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full border border-green-500/20">
+                            {{ project.metric }}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        {{ project.title }}
+                    </h3>
+
+                    <div class="space-y-3 mb-6">
+                        <div class="bg-ink-800/60 p-3.5 rounded-lg border border-ink-600/40">
+                            <span class="text-xs font-mono uppercase text-red-400 block mb-1">Problem</span>
+                            <p class="text-sm text-gray-300">{{ project.problem }}</p>
+                        </div>
+                        <div class="bg-ink-800/60 p-3.5 rounded-lg border border-accent-500/20">
+                            <span class="text-xs font-mono uppercase text-accent-400 block mb-1">AI Solution</span>
+                            <p class="text-sm text-gray-300">{{ project.solution }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex flex-wrap gap-1.5 mb-5">
+                        {% for tag in project.tags %}
+                        <span class="tech-badge">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="#contact" class="btn-secondary w-full justify-center text-sm py-2">
+                        <span>Request Similar Solution</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     8. TECHNOLOGY STACK (#technology)
+     ========================================================================= -->
+<section id="technology" class="py-24 bg-ink-950/70 border-t border-b border-ink-600/40 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+                Technology
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                Technology Stack
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                The tools and technologies I work with across the full development lifecycle.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for cat in tech_stack %}
+            <div class="card-surface rounded-2xl p-7 border border-ink-600/50 hover:border-accent-500/40 transition-colors">
+                <div class="flex items-center gap-3 border-b border-ink-600/40 pb-4 mb-4">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300">
+                        <i data-lucide="{{ cat.icon }}" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white">{{ cat.group }}</h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    {% for item in cat['items'] %}
+                    <span class="tech-badge">{{ item }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     9. HOW I WORK (#how-i-work)
+     ========================================================================= -->
+<section id="how-i-work" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                How I Work
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                From Existing Software to AI-Powered Software
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                A structured approach to integrating AI into your applications — practically and reliably.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-surface rounded-2xl p-7 relative overflow-hidden group">
+                <div class="font-mono text-7xl font-bold text-ink-500/15 absolute -right-3 -top-3 group-hover:text-accent-500/20 transition-colors pointer-events-none">
+                    01
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white mb-2">
+                        <span class="font-mono text-accent-400 text-sm block mb-0.5">Step 01</span>
+                        Understand
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Understand the existing application architecture, codebase, and core business problems.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 relative overflow-hidden group">
+                <div class="font-mono text-7xl font-bold text-ink-500/15 absolute -right-3 -top-3 group-hover:text-accent-500/20 transition-colors pointer-events-none">
+                    02
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="line-chart" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white mb-2">
+                        <span class="font-mono text-accent-400 text-sm block mb-0.5">Step 02</span>
+                        Analyze
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Identify exactly where AI can provide measurable business value rather than adding complexity.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 relative overflow-hidden group">
+                <div class="font-mono text-7xl font-bold text-ink-500/15 absolute -right-3 -top-3 group-hover:text-accent-500/20 transition-colors pointer-events-none">
+                    03
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="git-branch" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white mb-2">
+                        <span class="font-mono text-accent-400 text-sm block mb-0.5">Step 03</span>
+                        Design
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Design a clean, decoupled AI integration architecture that safeguards security and performance.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 relative overflow-hidden group">
+                <div class="font-mono text-7xl font-bold text-ink-500/15 absolute -right-3 -top-3 group-hover:text-accent-500/20 transition-colors pointer-events-none">
+                    04
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="code" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white mb-2">
+                        <span class="font-mono text-accent-400 text-sm block mb-0.5">Step 04</span>
+                        Develop
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Build the integration APIs, middleware endpoints, and intelligent AI functionality.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 relative overflow-hidden group">
+                <div class="font-mono text-7xl font-bold text-ink-500/15 absolute -right-3 -top-3 group-hover:text-accent-500/20 transition-colors pointer-events-none">
+                    05
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white mb-2">
+                        <span class="font-mono text-accent-400 text-sm block mb-0.5">Step 05</span>
+                        Test
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Validate performance, reliability, error handling, and accuracy of AI responses.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 relative overflow-hidden group">
+                <div class="font-mono text-7xl font-bold text-ink-500/15 absolute -right-3 -top-3 group-hover:text-accent-500/20 transition-colors pointer-events-none">
+                    06
+                </div>
+                <div class="relative z-10">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-300 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="rocket" class="w-5 h-5"></i>
+                    </span>
+                    <h3 class="text-lg font-semibold text-white mb-2">
+                        <span class="font-mono text-accent-400 text-sm block mb-0.5">Step 06</span>
+                        Deploy
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Deploy to production with automated monitoring, telemetry, and rate-limiting safeguards.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     10. WHY WORK WITH ME
+     ========================================================================= -->
+<section class="py-24 bg-ink-950/70 border-t border-b border-ink-600/40 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                Why Work With Me
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                Software Engineering First. AI Where It Makes Sense.
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                AI is a tool — not a solution in itself. The goal is real business value, built on solid engineering.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-surface rounded-2xl p-7 flex items-start gap-5">
+                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </span>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Existing Application Experience</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Deep practical understanding of how real enterprise applications, complex APIs, and legacy databases operate under load.</p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 flex items-start gap-5">
+                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300">
+                    <i data-lucide="component" class="w-6 h-6"></i>
+                </span>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-2">.NET Expertise</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">15+ years of hands-on expertise building and scaling .NET-based enterprise solutions across varied industries.</p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 flex items-start gap-5">
+                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300">
+                    <i data-lucide="target" class="w-6 h-6"></i>
+                </span>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-2">AI Integration Focus</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Dedicated focus on integrating modern LLMs, RAG, and AI agents into practical, revenue-generating software.</p>
+                </div>
+            </div>
+            
+            <div class="card-surface rounded-2xl p-7 flex items-start gap-5">
+                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300">
+                    <i data-lucide="trending-up" class="w-6 h-6"></i>
+                </span>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Business-Focused Solutions</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Build AI solutions around actual business ROI and efficiency instead of adding AI just for the sake of buzzwords.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     11. ABOUT ME (#about)
+     ========================================================================= -->
+<section id="about" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <!-- Left Profile Card -->
+            <div class="lg:col-span-5 card-surface rounded-2xl p-8 border border-ink-600/70 text-center sm:text-left">
+                <div class="flex flex-col sm:flex-row items-center gap-5 pb-6 border-b border-ink-600/40">
+                    <span class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 text-3xl font-mono font-bold text-white shadow-xl shadow-accent-900/40">
+                        {{ personal.avatar_letter }}
+                    </span>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white">{{ personal.name }}</h3>
+                        <p class="text-sm font-medium text-accent-400">{{ personal.role }}</p>
+                        <p class="text-sm text-gray-500">{{ personal.specialization }}</p>
+                    </div>
+                </div>
+
+                <div class="pt-6 space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Experience</span>
+                        <span class="font-medium text-gray-200">{{ personal.experience_years }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Focus</span>
+                        <span class="font-medium text-gray-200">{{ personal.focus }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Availability</span>
+                        <span class="inline-flex items-center gap-1.5 font-medium text-green-400">
+                            <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                            {{ personal.availability }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Bio Details -->
+            <div class="lg:col-span-7 space-y-6">
+                <div>
+                    <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                        About
+                    </span>
+                    <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                        About Me
+                    </h2>
+                </div>
+
+                <div class="space-y-4 text-gray-300 leading-relaxed text-base">
+                    <p>I'm {{ personal.name }}, a software developer with 15+ years of experience working with .NET and enterprise software development.</p>
+                    <p>My current focus is expanding this software engineering experience into AI and LLM integration.</p>
+                    <p>I am particularly interested in helping businesses connect modern AI capabilities with their existing applications, APIs and databases.</p>
+                </div>
+
+                <div class="rounded-xl border border-accent-500/20 bg-accent-500/5 p-6">
+                    <p class="text-lg font-semibold text-white">
+                        "AI can be integrated into your existing software."
+                    </p>
+                    <p class="mt-2 text-sm text-gray-400">
+                        That's the core principle behind everything I build.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     12. FREELANCE SERVICES
+     ========================================================================= -->
+<section class="py-20 bg-ink-950/70 border-t border-b border-ink-600/40 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+                Freelance Services
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                Available for Freelance & Consulting Projects
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                Engagements range from focused AI integrations to full application modernization.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto mb-14">
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">AI / LLM Integration</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">.NET Development</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">API Integration</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">Proof of Concept (PoC) Development</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">Enterprise RAG Document Search</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">Autonomous AI Agent Workflows</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">Legacy Application Modernization</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-xl border border-ink-600/50 bg-ink-800/40 px-5 py-4 hover:border-accent-500/40 transition-colors">
+                <span class="h-2 w-2 rounded-full bg-accent-500 shrink-0"></span>
+                <span class="text-sm font-medium text-gray-200">AI Feasibility & Architecture Consulting</span>
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class="max-w-3xl mx-auto rounded-2xl border border-accent-500/30 bg-gradient-to-br from-accent-500/15 to-cyan-500/10 p-8 sm:p-12 text-center">
+            <h3 class="text-2xl sm:text-3xl font-bold text-white">
+                Have an Existing Application You Want to Add AI To?
+            </h3>
+            <p class="mt-3 text-base text-gray-300 max-w-xl mx-auto">
+                Let's explore how AI can make your existing software smarter and more automated without a risky rebuild.
+            </p>
+            <a href="#contact" class="btn-primary mt-6">
+                <span>Start a Conversation</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     13. CONTACT FORM SECTION (#contact)
+     ========================================================================= -->
+<section id="contact" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-accent-400 bg-accent-500/10 px-3 py-1 rounded-full border border-accent-500/20">
+                Contact
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                Let's Discuss Your Project
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                Have an existing application or an AI idea? Tell me what you're trying to build.
+            </p>
+        </div>
+
+        <div class="max-w-2xl mx-auto card-surface rounded-2xl p-6 sm:p-10 border border-ink-600/70">
+            <!-- Success Confirmation State -->
+            <div id="form-success" class="hidden rounded-xl border border-green-500/30 bg-green-500/10 p-8 text-center">
+                <span class="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 text-green-400 mx-auto mb-4">
+                    <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+                </span>
+                <h3 class="text-xl font-bold text-white mb-2">Project Request Received</h3>
+                <p class="text-sm text-gray-300 max-w-md mx-auto leading-relaxed">
+                    Thank you for reaching out! I've received your project details and will review them shortly to follow up with an actionable proposal.
+                </p>
+                <button id="reset-form-btn" type="button" class="btn-secondary mt-6 text-sm">
+                    Send Another Request
+                </button>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="form-error" class="hidden mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"></div>
+
+            <!-- Contact Form -->
+            <form id="contact-form" class="space-y-5" novalidate>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-300 mb-1.5">
+                            Name <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="name" name="name" placeholder="Your name" class="w-full bg-ink-700/40 border border-ink-500/50 rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500/40 transition-colors">
+                        <p id="name-error" class="hidden text-xs text-red-400 mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1.5">
+                            Email <span class="text-red-400">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" placeholder="you@company.com" class="w-full bg-ink-700/40 border border-ink-500/50 rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500/40 transition-colors">
+                        <p id="email-error" class="hidden text-xs text-red-400 mt-1"></p>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="company" class="block text-sm font-medium text-gray-300 mb-1.5">
+                        Company <span class="text-xs text-gray-500">(Optional)</span>
+                    </label>
+                    <input type="text" id="company" name="company" placeholder="Company or organization name" class="w-full bg-ink-700/40 border border-ink-500/50 rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500/40 transition-colors">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="projectType" class="block text-sm font-medium text-gray-300 mb-1.5">
+                            Project Type <span class="text-red-400">*</span>
+                        </label>
+                        <select id="projectType" name="projectType" class="w-full bg-ink-700/40 border border-ink-500/50 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-accent-500/40 transition-colors">
+                            <option value="">Select a type...</option>
+                            <option value="AI / LLM Integration">AI / LLM Integration</option>
+                            <option value="ChatGPT Integration">ChatGPT Integration</option>
+                            <option value="AI Agent">AI Agent</option>
+                            <option value="RAG">RAG</option>
+                            <option value="Voice AI">Voice AI</option>
+                            <option value=".NET Development">.NET Development</option>
+                            <option value="Python Development">Python Development</option>
+                            <option value="API Integration">API Integration</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <p id="projectType-error" class="hidden text-xs text-red-400 mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label for="existingTechnology" class="block text-sm font-medium text-gray-300 mb-1.5">
+                            Existing Technology <span class="text-red-400">*</span>
+                        </label>
+                        <select id="existingTechnology" name="existingTechnology" class="w-full bg-ink-700/40 border border-ink-500/50 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-accent-500/40 transition-colors">
+                            <option value="">Select technology...</option>
+                            <option value=".NET">.NET</option>
+                            <option value="Java">Java</option>
+                            <option value="Python">Python</option>
+                            <option value="React">React</option>
+                            <option value="Angular">Angular</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <p id="existingTechnology-error" class="hidden text-xs text-red-400 mt-1"></p>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="projectDescription" class="block text-sm font-medium text-gray-300 mb-1.5">
+                        Project Description <span class="text-red-400">*</span>
+                    </label>
+                    <textarea id="projectDescription" name="projectDescription" rows="4" placeholder="Tell me about your application, the AI features you are interested in, and any specific requirements or goals (min 20 characters)..." class="w-full bg-ink-700/40 border border-ink-500/50 rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500/40 transition-colors resize-none"></textarea>
+                    <p id="projectDescription-error" class="hidden text-xs text-red-400 mt-1"></p>
+                </div>
+
+                <div class="pt-2">
+                    <button id="contact-submit-btn" type="submit" class="w-full btn-primary py-3.5">
+                        <i id="submit-btn-spinner" data-lucide="loader-2" class="w-4 h-4 animate-spin hidden"></i>
+                        <span id="submit-btn-text">Send Project Request</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-ink-600/50 text-center">
+                <p class="text-xs font-mono uppercase tracking-wider text-gray-500 mb-2">Or reach out directly</p>
+                <a href="mailto:{{ personal.email }}" class="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-accent-400 hover:text-accent-300 transition-colors bg-accent-500/10 px-4 py-2 rounded-lg border border-accent-500/20 hover:border-accent-500/40">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    <span>{{ personal.email }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     14. FREQUENTLY ASKED QUESTIONS (#faq)
+     ========================================================================= -->
+<section id="faq" class="py-24 bg-ink-950/70 border-t border-ink-600/40 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-mono font-semibold tracking-wider uppercase text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+                FAQ
+            </span>
+            <h2 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                Frequently Asked Questions
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+                Common questions about integrating AI into existing software.
+            </p>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-3">
+            {% for faq in faqs %}
+            <div class="faq-item overflow-hidden rounded-xl border border-ink-600/50 bg-ink-800/40 hover:border-ink-500/60 transition-colors">
+                <button type="button" class="faq-toggle flex w-full items-center justify-between gap-4 px-6 py-4 text-left" aria-expanded="false">
+                    <span class="text-base font-semibold text-white">{{ faq.q }}</span>
+                    <span class="faq-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-700/50 text-gray-400 transition-transform duration-200">
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </span>
+                </button>
+                <div class="faq-answer hidden px-6 pb-5 pt-1 text-sm text-gray-300 leading-relaxed border-t border-ink-700/40">
+                    {{ faq.a }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

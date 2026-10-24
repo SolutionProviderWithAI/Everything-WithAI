@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+    
+    <!-- Primary Meta Tags -->
+    <title>{{ personal.project_title or 'EverythingWithAI' }}</title>
+    <meta name="title" content="{{ personal.project_title or 'EverythingWithAI' }}">
+    <meta name="description" content="{{ personal.bio_summary }} {{ personal.experience_summary }}">
+    <meta name="keywords" content="AI integration, LLM integration, ChatGPT integration, .NET developer, AI agents, RAG, voice AI, enterprise software modernization, freelance developer, Python, FastAPI">
+    <meta name="author" content="{{ personal.name }}">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ personal.project_title or 'EverythingWithAI' }}">
+    <meta property="og:description" content="{{ personal.bio_summary }}">
+    <meta property="og:url" content="https://sujit.dev">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ink: {
+                            500: '#2a3454',
+                            600: '#1f2742',
+                            700: '#161c30',
+                            800: '#0f1424',
+                            950: '#060814',
+                        },
+                        accent: {
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-ink-950 text-gray-200 antialiased font-sans selection:bg-accent-500/30 selection:text-white relative min-h-screen">
+
+    <!-- Ambient background glows -->
+    <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute -top-40 left-1/4 h-[600px] w-[600px] rounded-full bg-accent-600/10 blur-[140px]"></div>
+        <div class="absolute top-1/3 -right-40 h-[500px] w-[500px] rounded-full bg-cyan-500/5 blur-[140px]"></div>
+        <div class="absolute bottom-10 left-10 h-[500px] w-[500px] rounded-full bg-accent-800/10 blur-[150px]"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header id="main-nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/#home" class="group flex items-center gap-3">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent-600 to-accent-800 font-mono text-lg font-bold text-white shadow-lg shadow-accent-900/40 transition-transform group-hover:scale-105">
+                    {{ personal.avatar_letter }}
+                </span>
+                <span class="text-xl font-bold tracking-tight text-white">
+                    Everything<span class="text-accent-500">WithAI</span>
+                </span>
+            </a>
+
+            <!-- Desktop Nav Items -->
+            <nav class="hidden lg:flex items-center gap-1 bg-ink-800/50 p-1.5 rounded-full border border-ink-600/50 backdrop-blur-md">
+                <a href="/#home" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    Home
+                </a>
+                <a href="/#solutions" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    AI Solutions
+                </a>
+                <a href="/#architecture" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    Architecture
+                </a>
+                <a href="/#experience" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    Experience
+                </a>
+                <a href="/#projects" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    Projects
+                </a>
+                <a href="/#technology" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    Technology
+                </a>
+                <a href="/#how-i-work" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    How I Work
+                </a>
+                <a href="/#about" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    About
+                </a>
+                <a href="/#contact" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-full transition-colors hover:bg-ink-700/60">
+                    Contact
+                </a>
+            </nav>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-3">
+                <a href="/#contact" class="hidden sm:inline-flex btn-primary text-sm py-2 px-4 shadow-accent-900/50">
+                    <span>Discuss Project</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="mobile-menu-btn" type="button" aria-label="Toggle Navigation Menu" class="lg:hidden p-2.5 rounded-lg border border-ink-600/70 bg-ink-800/50 text-gray-300 hover:text-white focus:outline-none">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 top-20 bg-ink-950/95 mobile-nav-backdrop p-6 z-40 border-t border-ink-600/50">
+            <nav class="flex flex-col gap-4 text-center">
+                <a href="/#home" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    Home
+                </a>
+                <a href="/#solutions" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    AI Solutions
+                </a>
+                <a href="/#architecture" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    Architecture
+                </a>
+                <a href="/#experience" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    Experience
+                </a>
+                <a href="/#projects" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    Projects
+                </a>
+                <a href="/#technology" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    Technology
+                </a>
+                <a href="/#how-i-work" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    How I Work
+                </a>
+                <a href="/#about" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    About
+                </a>
+                <a href="/#contact" class="mobile-nav-link text-lg font-medium text-gray-300 hover:text-accent-400 py-3 border-b border-ink-700/50">
+                    Contact
+                </a>
+                <a href="/#contact" class="mobile-nav-link btn-primary mt-4 py-3 justify-center">
+                    Discuss Project
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Page Content -->
+    <main class="pt-24 sm:pt-28">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-ink-600/40 bg-ink-950/80 py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+                <!-- Col 1: Brand -->
+                <div>
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-accent-600 to-accent-800 font-mono text-base font-bold text-white">
+                            {{ personal.avatar_letter }}
+                        </span>
+                        <span class="text-lg font-bold tracking-tight text-white">
+                            Everything<span class="text-accent-500">WithAI</span>
+                        </span>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-400 leading-relaxed max-w-sm">
+                        Building smarter software with AI. Helping businesses modernize their applications with ChatGPT, LLMs, and intelligent automation.
+                    </p>
+                </div>
+
+                <!-- Col 2: Navigation Links -->
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">Quick Links</h4>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-gray-400">
+                        <li><a href="/#home" class="hover:text-accent-300 transition-colors">Home</a></li>
+                        <li><a href="/#solutions" class="hover:text-accent-300 transition-colors">AI Solutions</a></li>
+                        <li><a href="/#architecture" class="hover:text-accent-300 transition-colors">Architecture</a></li>
+                        <li><a href="/#experience" class="hover:text-accent-300 transition-colors">Experience</a></li>
+                        <li><a href="/#projects" class="hover:text-accent-300 transition-colors">Projects</a></li>
+                        <li><a href="/#technology" class="hover:text-accent-300 transition-colors">Technology</a></li>
+                        <li><a href="/#how-i-work" class="hover:text-accent-300 transition-colors">How I Work</a></li>
+                        <li><a href="/#about" class="hover:text-accent-300 transition-colors">About</a></li>
+                        <li><a href="/#contact" class="hover:text-accent-300 transition-colors">Contact</a></li>
+                        <li><a href="/requests" class="hover:text-accent-300 transition-colors text-accent-400">Client Inquiries</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Social & Status -->
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">Connect & Status</h4>
+                    <div class="flex items-center gap-2 mb-4 text-sm text-gray-300">
+                        <span class="pulsing-dot"></span>
+                        <span class="text-green-400 font-medium">{{ personal.status_badge }}</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="{{ personal.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-10 w-10 items-center justify-center rounded-lg border border-ink-600/60 bg-ink-800/40 text-gray-400 hover:border-accent-500/50 hover:text-accent-300 transition-colors">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                        <a href="{{ personal.github_url }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-10 w-10 items-center justify-center rounded-lg border border-ink-600/60 bg-ink-800/40 text-gray-400 hover:border-accent-500/50 hover:text-accent-300 transition-colors">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </a>
+                        <a href="mailto:{{ personal.email }}" aria-label="Email" class="flex h-10 w-10 items-center justify-center rounded-lg border border-ink-600/60 bg-ink-800/40 text-gray-400 hover:border-accent-500/50 hover:text-accent-300 transition-colors">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="mailto:{{ personal.email }}" class="text-xs font-mono text-gray-400 hover:text-accent-300 transition-colors inline-flex items-center gap-1.5">
+                            <i data-lucide="send" class="w-3 h-3 text-accent-400"></i>
+                            <span>{{ personal.email }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 border-t border-ink-600/40 pt-6 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-500 gap-4">
+                <p>&copy; 2026 {{ personal.name }}. All rights reserved.</p>
+                <p class="flex items-center gap-1.5">
+                    <span>Engineered with Python & FastAPI</span>
+                    <span class="text-accent-400">•</span>
+                    <span>Ready to Deploy</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Client Script -->
+    <script src="/static/js/script.js"></script>
+    <script>
+        // Render lucide icons
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

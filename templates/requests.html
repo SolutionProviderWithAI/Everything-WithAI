@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-8 border-b border-ink-600/50 gap-4">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-500/10 border border-accent-500/20 text-accent-300 font-mono text-xs mb-3">
+                    <i data-lucide="inbox" class="w-3.5 h-3.5"></i>
+                    <span>Inquiries Dashboard</span>
+                </div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">Received Project Requests</h1>
+                <p class="text-sm text-gray-400 mt-1">
+                    All client project inquiries submitted via the "Send Project Request" form.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="/api/submissions" target="_blank" class="btn-secondary text-xs py-2 px-3">
+                    <i data-lucide="code" class="w-4 h-4"></i>
+                    <span>View JSON API</span>
+                </a>
+                <a href="/" class="btn-primary text-xs py-2 px-3">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Portfolio</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Requests List -->
+        <div class="mt-8">
+            {% if submissions and submissions|length > 0 %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for item in submissions %}
+                    <div class="card-surface rounded-2xl p-6 border border-ink-600/60 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-4 mb-4 pb-4 border-b border-ink-700/50">
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">{{ item.name }}</h3>
+                                    <p class="text-xs font-mono text-accent-400 mt-0.5">
+                                        <a href="mailto:{{ item.email }}" class="hover:underline">{{ item.email }}</a>
+                                        {% if item.company %}
+                                        <span class="text-gray-500">•</span>
+                                        <span class="text-gray-300">{{ item.company }}</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <span class="text-[11px] font-mono text-gray-500 bg-ink-800/80 px-2.5 py-1 rounded border border-ink-600/50">
+                                    #{{ item.id }}
+                                </span>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="tech-badge bg-accent-500/15 text-accent-300 border-accent-500/30">
+                                    {{ item.project_type }}
+                                </span>
+                                <span class="tech-badge">
+                                    Stack: {{ item.existing_technology }}
+                                </span>
+                            </div>
+
+                            <div class="bg-ink-800/60 p-4 rounded-xl border border-ink-700/50 text-sm text-gray-300 leading-relaxed mb-4">
+                                {{ item.project_description }}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-ink-700/40 font-mono">
+                            <span>Received: {{ item.created_at }}</span>
+                            <a href="mailto:{{ item.email }}?subject=RE: {{ item.project_type }} Project Inquiry" class="inline-flex items-center gap-1 text-accent-400 hover:text-accent-300 font-sans">
+                                <span>Reply</span>
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card-surface rounded-2xl p-12 text-center border border-ink-600/50 max-w-xl mx-auto my-12">
+                    <span class="flex h-16 w-16 items-center justify-center rounded-2xl bg-ink-700/60 text-gray-400 mx-auto mb-4">
+                        <i data-lucide="inbox" class="w-8 h-8"></i>
+                    </span>
+                    <h3 class="text-xl font-bold text-white mb-2">No Requests Yet</h3>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                        When visitors fill out the "Let's Discuss Your Project" form and click "Send Project Request", their details will appear here.
+                    </p>
+                    <a href="/#contact" class="btn-primary text-xs">
+                        <span>Go to Contact Form</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

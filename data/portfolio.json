@@ -1,0 +1,324 @@
+{
+  "personal": {
+    "name": "Sujit",
+    "project_title": "EverythingWithAI",
+    "brand": "EverythingWithAI",
+    "avatar_letter": "E",
+    "role": "Senior .NET Software Developer",
+    "specialization": "AI & LLM Integration Developer",
+    "headline": "Building Smarter Software with AI",
+    "tagline": "Building smarter software with AI.",
+    "bio_summary": "Helping businesses integrate ChatGPT, LLMs, AI agents and intelligent automation into their existing software applications.",
+    "experience_summary": "15+ years of software development experience with a focus on .NET, APIs, databases and modern AI integration.",
+    "experience_years": "15+ Years",
+    "focus": ".NET & AI Integration",
+    "availability": "Open",
+    "status_badge": "Available for freelance & consulting",
+    "email": "sandilya.sujit@gmail.com",
+    "github_url": "https://github.com",
+    "linkedin_url": "https://linkedin.com",
+    "location": "Global / Remote"
+  },
+  "value_prop": {
+    "eyebrow": "Value Proposition",
+    "title": "AI Doesn't Always Mean Rebuilding Your Application",
+    "subtitle": "Many businesses already have working software. Instead of replacing it, AI can be integrated into the existing system to make it smarter, faster and more automated.",
+    "pillars": [
+      {
+        "step": "01",
+        "title": "Integrate",
+        "desc": "Connect AI capabilities with your existing applications, APIs and databases without disrupting ongoing operations.",
+        "icon": "layers"
+      },
+      {
+        "step": "02",
+        "title": "Automate",
+        "desc": "Use AI agents and intelligent workflows to reduce repetitive manual work and speed up business processes.",
+        "icon": "cpu"
+      },
+      {
+        "step": "03",
+        "title": "Modernize",
+        "desc": "Add modern AI capabilities to existing .NET and enterprise applications, unlocking new value from your legacy systems.",
+        "icon": "sparkles"
+      }
+    ]
+  },
+  "solutions": [
+    {
+      "icon": "message-square-code",
+      "title": "ChatGPT & LLM Integration",
+      "desc": "Integrate large language models into existing business applications to generate responses, analyze data, and assist users seamlessly.",
+      "tags": [
+        "OpenAI",
+        "LLMs",
+        ".NET",
+        "REST APIs"
+      ]
+    },
+    {
+      "icon": "bot",
+      "title": "AI Agents",
+      "desc": "Build AI agents that can autonomously use APIs, query databases, execute business workflows, and perform complex multi-step tasks.",
+      "tags": [
+        "AI Agents",
+        "Python",
+        "APIs",
+        "Automation"
+      ]
+    },
+    {
+      "icon": "database",
+      "title": "RAG Applications",
+      "desc": "Connect AI to private company documents, knowledge bases, and internal databases securely with embeddings and vector search.",
+      "tags": [
+        "RAG",
+        "Embeddings",
+        "Vector DB",
+        "Python"
+      ]
+    },
+    {
+      "icon": "workflow",
+      "title": "AI Automation",
+      "desc": "Automate repetitive business processes and data pipelines using intelligent, AI-powered agentic workflows.",
+      "tags": [
+        "Automation",
+        "LLMs",
+        "Workflows",
+        "APIs"
+      ]
+    },
+    {
+      "icon": "mic",
+      "title": "Voice AI",
+      "desc": "Build intelligent voice assistants for customer support, call handling, and real-time interactive business operations.",
+      "tags": [
+        "Voice AI",
+        "LLMs",
+        "REST APIs",
+        "Automation"
+      ]
+    },
+    {
+      "icon": "code-2",
+      "title": "Custom AI Applications",
+      "desc": "Design and develop tailored AI-powered applications engineered specifically around your unique business requirements.",
+      "tags": [
+        ".NET",
+        "Python",
+        "LLMs",
+        "Custom"
+      ]
+    }
+  ],
+  "experience": {
+    "eyebrow": "Experience",
+    "title": "Software Engineering Experience",
+    "subtitle": "A foundation in enterprise software development, now focused on AI integration.",
+    "years": "15+ Years",
+    "summary": "Building and maintaining enterprise-grade applications with a strong focus on backend systems, APIs, database architecture, and reliable production software.",
+    "areas": [
+      {
+        "title": "Enterprise application development",
+        "desc": "Designing high-availability scalable systems that power business operations.",
+        "icon": "building-2"
+      },
+      {
+        "title": "Backend development",
+        "desc": "Solid architectural foundation in C#, ASP.NET Core, and Python microservices.",
+        "icon": "server"
+      },
+      {
+        "title": "API integration",
+        "desc": "Robust RESTful APIs, webhooks, third-party service connections, and authentication.",
+        "icon": "arrow-left-right"
+      },
+      {
+        "title": "Database-driven applications",
+        "desc": "High-performance data modeling, indexing, and complex queries across SQL Server & Oracle.",
+        "icon": "database"
+      },
+      {
+        "title": "Application maintenance and modernization",
+        "desc": "Refactoring and infusing AI into legacy codebases without breaking functionality.",
+        "icon": "refresh-cw"
+      }
+    ],
+    "tech_badges": [
+      ".NET",
+      "C#",
+      "ASP.NET",
+      "SQL",
+      "Oracle",
+      "REST APIs",
+      "Python",
+      "AI / LLM Integration"
+    ]
+  },
+  "projects": [
+    {
+      "id": "customer-support",
+      "icon": "headset",
+      "title": "AI Customer Support Assistant",
+      "problem": "Customers need quick answers to common questions and support teams are overwhelmed by repetitive inquiries.",
+      "solution": "An AI assistant connected to company knowledge bases and documentation that provides accurate, context-aware answers 24/7.",
+      "tags": [
+        "LLM",
+        "RAG",
+        "Python",
+        "REST API"
+      ],
+      "metric": "85% reduction in response time"
+    },
+    {
+      "id": "net-enterprise-assistant",
+      "icon": "boxes",
+      "title": "AI Assistant for Existing .NET Application",
+      "problem": "An existing enterprise application has large amounts of information but users need to search manually through complex screens.",
+      "solution": "Add an AI assistant that understands natural-language questions and retrieves relevant application data directly via secure APIs.",
+      "tags": [
+        ".NET",
+        "C#",
+        "LLM",
+        "SQL",
+        "REST API"
+      ],
+      "metric": "Zero downtime integration"
+    },
+    {
+      "id": "document-assistant",
+      "icon": "file-search",
+      "title": "Enterprise Document Assistant",
+      "problem": "Employees spend hours searching through large numbers of technical specifications, policies, and internal PDFs.",
+      "solution": "Allow employees to ask natural questions about company documents using Retrieval-Augmented Generation (RAG) with vector embeddings.",
+      "tags": [
+        "Python",
+        "LLM",
+        "Embeddings",
+        "Vector Database"
+      ],
+      "metric": "Instant multi-document lookup"
+    },
+    {
+      "id": "voice-assistant",
+      "icon": "phone-call",
+      "title": "AI Voice Assistant",
+      "problem": "Businesses receive repetitive customer calls and require real-time voice handling with low latency.",
+      "solution": "Create an AI voice assistant capable of handling common conversations, verifying caller data, and triggering business APIs in real time.",
+      "tags": [
+        "Voice AI",
+        "LLM",
+        "REST APIs",
+        "Automation"
+      ],
+      "metric": "Sub-second speech turnaround"
+    }
+  ],
+  "tech_stack": [
+    {
+      "group": "Backend",
+      "icon": "server",
+      "items": [
+        "C#",
+        ".NET",
+        "ASP.NET Core",
+        "Web APIs",
+        "Python",
+        "FastAPI"
+      ]
+    },
+    {
+      "group": "AI & LLM",
+      "icon": "brain",
+      "items": [
+        "OpenAI",
+        "LLMs",
+        "RAG",
+        "Embeddings",
+        "AI Agents",
+        "Prompt Engineering",
+        "Vector Databases"
+      ]
+    },
+    {
+      "group": "Databases",
+      "icon": "database",
+      "items": [
+        "SQL Server",
+        "Oracle",
+        "PostgreSQL",
+        "ChromaDB",
+        "Pinecone"
+      ]
+    },
+    {
+      "group": "Frontend",
+      "icon": "layout",
+      "items": [
+        "React",
+        "JavaScript",
+        "TypeScript",
+        "HTML5",
+        "CSS3 / Tailwind"
+      ]
+    },
+    {
+      "group": "Integration",
+      "icon": "network",
+      "items": [
+        "REST APIs",
+        "JSON",
+        "Webhooks",
+        "Third-party APIs",
+        "gRPC"
+      ]
+    },
+    {
+      "group": "Cloud & DevOps",
+      "icon": "cloud",
+      "items": [
+        "Azure",
+        "AWS",
+        "Docker",
+        "CI/CD",
+        "Render",
+        "Linux"
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Can you integrate AI into an existing .NET application?",
+      "a": "Yes. This is the core of what I do. AI capabilities like chat interfaces, document search, and intelligent automation can be added as a new layer on top of your existing .NET application — without rebuilding it. The integration typically involves connecting your application to an LLM through APIs, linking it to your existing database, and adding the necessary business logic."
+    },
+    {
+      "q": "Can AI connect to an existing database?",
+      "a": "Absolutely. AI can be connected to your existing SQL Server, Oracle, PostgreSQL, or other databases. Using techniques like RAG (Retrieval-Augmented Generation) and function-calling AI agents, the AI can query your database, retrieve relevant information, and use it to provide intelligent, context-aware responses."
+    },
+    {
+      "q": "Can I use my company's private documents with an LLM?",
+      "a": "Yes. Using RAG, your private documents are processed into embeddings and stored in a vector database. When a user asks a question, the system retrieves the most relevant document sections and passes them to the LLM as context. Your documents stay private — they are not used to train the model."
+    },
+    {
+      "q": "Can you build a proof of concept?",
+      "a": "Yes. I offer proof of concept (PoC) development to help you validate an AI idea before committing to a full implementation. A PoC typically covers a focused use case — for example, a document search assistant or a simple AI chatbot connected to your data — so you can see real results quickly and make an informed decision."
+    },
+    {
+      "q": "Can you integrate OpenAI into an existing application?",
+      "a": "Yes. OpenAI integration is one of the most common requests. This involves connecting your application to OpenAI APIs (such as GPT models), handling authentication, managing prompts, processing responses, and integrating the results into your existing user interface and business logic."
+    },
+    {
+      "q": "Can you build AI agents?",
+      "a": "Yes. AI agents can be built to perform tasks beyond simple text generation. An AI agent can use your APIs, query databases, execute business workflows, and make decisions based on the results. This is useful for automating multi-step processes that currently require manual intervention."
+    },
+    {
+      "q": "Can AI work with existing REST APIs?",
+      "a": "Yes. AI agents and LLMs with function-calling capabilities can interact with your existing REST APIs. This allows the AI to fetch data, trigger actions, and integrate with third-party services as part of its response generation — essentially giving the AI the ability to use your existing software as tools."
+    },
+    {
+      "q": "What information do you need before starting a project?",
+      "a": "To get started, it helps to have: a description of your existing application or idea, the technology stack you are using, the specific business problem you want to solve with AI, and any constraints around data privacy, budget, or timeline. The more context you can provide, the faster we can move from idea to implementation."
+    }
+  ]
+}
