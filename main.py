@@ -12,6 +12,7 @@ Full-stack FastAPI Application serving dynamic portfolio, AI Architecture Adviso
 AJAX Contact submissions with database persistence, and REST APIs.
 """
 
+import asyncio
 import json
 import os
 import sqlite3
@@ -367,18 +368,19 @@ async def get_portfolio_data():
 
 
 # -----------------------------------------------------------------------------
-# 7. Llama Brain Chat Endpoints (Ollama / Local RTX 3050)
+# 7. AI Brain Chat Endpoints (Groq Cloud Llama 3.3 / Local Ollama / Smart Knowledge Engine)
 # -----------------------------------------------------------------------------
-OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "").strip()
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile").strip()
+OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434").strip()
 
-LLAMA_SYSTEM_PROMPT = """You are Jarvis, the intelligent AI assistant and local Llama Brain for EverythingWithAI (https://everything-withai.onrender.com/).
-You run locally on an NVIDIA RTX 3050 GPU using Meta's Llama 3.2 model.
-You assist developers, engineering leads, and business owners looking to integrate modern AI into their applications.
+LLAMA_SYSTEM_PROMPT = """You are Jarvis, the intelligent AI assistant and architecture advisor for EverythingWithAI (https://everything-withai.onrender.com/).
+You assist software engineers, engineering leaders, and business owners looking to integrate modern AI into existing enterprise applications.
 
 Knowledge Base:
 - Developer & Founder: Sujit — Senior .NET Software Developer & AI/LLM Integration Specialist (15+ years of enterprise software engineering).
 - Core Services:
-  1. ChatGPT & LLM Integration (OpenAI, Claude, Llama, Ollama, API orchestration)
+  1. ChatGPT & LLM Integration (OpenAI, Claude, Llama, Groq, Ollama, API orchestration)
   2. Autonomous AI Agents (function calling, API tools, multi-step background workflow automation)
   3. Enterprise RAG Applications (Vector databases, ChromaDB, pgvector, Azure AI Search, secure semantic retrieval without data leakage)
   4. Voice AI (WebRTC, real-time telephony, sub-second latency speech processing)
@@ -394,13 +396,144 @@ Behavior & Tone:
 """
 
 
+def get_smart_knowledge_response(query: str, history: List[Any] = None) -> str:
+    q = query.lower().strip()
+
+    if any(k in q for k in ["hi", "hello", "hey", "who are you", "what is this", "introduce", "namaste", "morning", "evening"]):
+        return (
+            "### Hello! Welcome to EverythingWithAI 👋\n\n"
+            "I am **Jarvis**, your AI Architecture & Integration Assistant for **EverythingWithAI**.\n\n"
+            "I specialize in helping software engineers, architects, and business leaders integrate modern AI capabilities into existing enterprise applications.\n\n"
+            "**Here is how I can assist you today:**\n"
+            "- ⚡ **LLM & ChatGPT Integration**: Seamlessly connect OpenAI, Claude, or open-source Llama to existing business APIs.\n"
+            "- 🤖 **Autonomous AI Agents**: Multi-step workflow agents with structured tool-calling & permission guardrails.\n"
+            "- 📚 **Enterprise RAG Systems**: Private document search across SQL Server, PDFs, and vector databases without data leakage.\n"
+            "- 🎙️ **Voice AI**: Sub-second real-time conversational voice agents for customer calls and dispatching.\n"
+            "- 🔄 **.NET Modernization**: Infuse AI into existing C# / ASP.NET applications without costly rebuilds.\n\n"
+            "Feel free to ask a technical question, explore architecture patterns, or discuss a project!"
+        )
+
+    if any(k in q for k in [".net", "c#", "asp.net", "existing", "rebuild", "legacy", "monolith", "sql server", "rewrite"]):
+        return (
+            "### 🔄 AI Integration Without Rebuilding Your .NET Application\n\n"
+            "Our core philosophy is: **\"AI Doesn't Always Mean Rebuilding Your Application.\"**\n\n"
+            "Many organizations have robust, battle-tested software written in C#, ASP.NET, or .NET Framework. "
+            "You do **not** need to discard your code or migrate to a new stack to get the benefits of AI.\n\n"
+            "#### Recommended Architecture Pattern:\n"
+            "1. **Decoupled AI Middleware Gateway**:\n"
+            "   - Deploy a lightweight, high-performance async gateway (FastAPI or ASP.NET Core Semantic Kernel).\n"
+            "   - Your existing .NET application communicates with this gateway using standard REST/JSON or gRPC.\n"
+            "2. **Direct Enterprise Database Access**:\n"
+            "   - The AI middleware queries your existing **SQL Server**, **PostgreSQL**, or **Oracle** database using read-only connection pools.\n"
+            "3. **Zero Data Training Policy**:\n"
+            "   - Customer data is passed in-memory during context injection and is never used to train public models.\n"
+            "4. **C# Client Integration Example**:\n"
+            "```csharp\n"
+            "// Example C# HttpClient calling the AI Integration Gateway\n"
+            "using var client = new HttpClient();\n"
+            "var requestPayload = new {\n"
+            "    user_query = \"Summarize recent transactions for account #10492\",\n"
+            "    customer_context = dbContext.Customers.Find(customerId)\n"
+            "};\n"
+            "var response = await client.PostAsJsonAsync(\"https://ai-gateway.internal/api/advisor\", requestPayload);\n"
+            "var result = await response.Content.ReadFromJsonAsync<AIResponse>();\n"
+            "```\n\n"
+            "Would you like to review an architecture roadmap for your specific .NET stack?"
+        )
+
+    if any(k in q for k in ["rag", "document", "search", "vector", "embedding", "chroma", "pgvector", "knowledge"]):
+        return (
+            "### 📚 Enterprise RAG (Retrieval-Augmented Generation)\n\n"
+            "RAG allows your existing software to answer questions from internal company documents, manuals, and databases with verifiable citations and **zero hallucinations**.\n\n"
+            "#### How Our Production RAG Pipeline Works:\n"
+            "1. **Ingestion & Parsing**: Documents (PDFs, Word docs, confluence pages, database tables) are automatically ingested and preprocessed.\n"
+            "2. **Semantic Chunking**: Content is split into semantically coherent paragraphs with overlapping windows.\n"
+            "3. **Dense Vector Embeddings**: Text chunks are converted into dense vector embeddings using models like `text-embedding-3-small` or BGE.\n"
+            "4. **Vector Storage**: Stored in enterprise vector stores such as **Azure AI Search**, **pgvector (PostgreSQL)**, or **ChromaDB**.\n"
+            "5. **Semantic Retrieval + Guardrails**: When a user queries, the top-k most relevant excerpts are fetched and injected into the LLM system prompt with strict factual guardrails.\n\n"
+            "**Key Benefit**: Fast, private, and eliminates the risk of sensitive internal data leaking to public models.\n\n"
+            "Ready to test a RAG PoC on your company docs? You can submit your requirements via the **Discuss Project** form below!"
+        )
+
+    if any(k in q for k in ["agent", "autonomous", "tool", "function call", "workflow", "automate"]):
+        return (
+            "### 🤖 Autonomous AI Agents with API Tool-Calling\n\n"
+            "Traditional chatbots only respond with text. **AI Agents take real actions** across your systems.\n\n"
+            "#### Agent Architecture Components:\n"
+            "- **LLM Orchestrator**: Uses function-calling (OpenAI / Claude / Llama 3.3) to interpret intent and plan multi-step actions.\n"
+            "- **Tool Registry**: Your existing REST APIs (e.g. `CheckInventory`, `CreateTicket`, `SendInvoice`) are mapped as JSON Schema tools.\n"
+            "- **Execution Guardrails**: Role-based access control (RBAC) and confirmation boundaries prevent unauthorized database updates or transactions.\n"
+            "- **Async Task Queue**: Celery or background workers manage long-running multi-stage jobs.\n\n"
+            "**Best Practice**: We always start agents with read-only tools to build team trust, before gradually enabling write-capable operations."
+        )
+
+    if any(k in q for k in ["voice", "call", "audio", "webrtc", "speech", "phone", "telephony"]):
+        return (
+            "### 🎙️ Low-Latency Real-Time Voice AI\n\n"
+            "We build sub-second real-time voice agents suitable for customer support call handling, automated dispatch, and hands-free field operations.\n\n"
+            "- **Speech-to-Text (STT)**: Deepgram / Whisper streaming audio with sub-200ms latency.\n"
+            "- **LLM Reasoning**: Fast streaming models (Llama 3.3 on Groq / GPT-4o-mini) generating responses in real-time.\n"
+            "- **Text-to-Speech (TTS)**: ElevenLabs / Cartesia / Azure Neural Voice delivering human-grade emotion.\n"
+            "- **Barge-in Support**: Allows callers to naturally interrupt the AI assistant mid-sentence."
+        )
+
+    if any(k in q for k in ["cost", "price", "rate", "hire", "timeline", "quote", "contact", "email", "reach", "consult", "book", "meeting"]):
+        return (
+            "### 💼 Project Engagement & Consultation\n\n"
+            "We work with companies ranging from fast-growing startups to enterprise firms on a project or consulting basis.\n\n"
+            "**Typical Timelines**:\n"
+            "- ⚡ **Production PoC / MVP**: 1 to 2 weeks\n"
+            "- 🚀 **Full Enterprise Integration**: 3 to 6 weeks\n\n"
+            "**How to Connect with Sujit**:\n"
+            "- 📧 **Email**: [sandilya.sujit@gmail.com](mailto:sandilya.sujit@gmail.com)\n"
+            "- 📝 **Project Form**: Use the [Discuss Project](#contact) form on this page to detail your requirements and existing tech stack.\n"
+            "- 📊 **Inquiries Dashboard**: View recent submissions at [/requests](/requests).\n\n"
+            "Drop a message with your project goals, and Sujit will review your architecture and provide an action plan!"
+        )
+
+    if any(k in q for k in ["sujit", "experience", "developer", "founder", "background", "about", "bio", "years"]):
+        return (
+            "### 👨‍💻 About Sujit — Senior .NET & AI Integration Developer\n\n"
+            "- **15+ Years** of hands-on enterprise software engineering experience.\n"
+            "- **Core Expertise**: Enterprise application architecture, C#, ASP.NET Core, SQL Server, Python, FastAPI, and AI/LLM integration.\n"
+            "- **Specialization**: Bridging the gap between battle-tested enterprise backends and cutting-edge generative AI models (OpenAI, Claude, Llama, Ollama, vector search, autonomous agents).\n"
+            "- **Location**: Remote / Worldwide.\n"
+            "- **Contact**: [sandilya.sujit@gmail.com](mailto:sandilya.sujit@gmail.com)"
+        )
+
+    return (
+        f"### Architecture Perspective on: \"{query}\"\n\n"
+        "At **EverythingWithAI**, we focus on pragmatic, production-grade AI integration for existing business software.\n\n"
+        "**Key Architecture Recommendations:**\n"
+        "1. **Decouple AI from Core Business Logic**: Deploy AI capabilities as independent microservices or middleware to prevent vendor lock-in.\n"
+        "2. **Maintain Strict Data Privacy**: Ensure sensitive enterprise data is sanitized and protected with zero-training enterprise APIs or private on-premise models.\n"
+        "3. **Incorporate Feedback Loops**: Log model outputs and tool actions for observability, latency tracking, and prompt optimization.\n\n"
+        "Would you like to explore a tailored implementation plan, or connect with Sujit at **sandilya.sujit@gmail.com** to discuss your project?"
+    )
+
+
 @app.get("/api/chat/status", summary="Chat Engine Status", operation_id="chat_status_api_chat_status_get")
 async def chat_status():
     """
-    Checks if local Llama Ollama server is running and returns available models.
+    Checks active AI brain status:
+    1. Groq Cloud Llama 3.3 (if GROQ_API_KEY is configured)
+    2. Local Ollama RTX 3050 (if running locally or tunneled)
+    3. Built-in Smart Knowledge Engine (cloud-ready fallback)
     """
+    groq_key = os.environ.get("GROQ_API_KEY", "").strip()
+    groq_model = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile").strip()
+    if groq_key:
+        return {
+            "online": True,
+            "provider": "Groq Cloud (Llama 3.3)",
+            "active_model": groq_model,
+            "status_label": "Cloud Llama 3.3 Online",
+            "hardware": "Groq LPU Cloud (Ultra-Fast)"
+        }
+
+    # Test local Ollama connection
     try:
-        async with httpx.AsyncClient(timeout=3.0) as client:
+        async with httpx.AsyncClient(timeout=2.0) as client:
             resp = await client.get(f"{OLLAMA_BASE_URL}/api/tags")
             if resp.status_code == 200:
                 data = resp.json()
@@ -410,39 +543,90 @@ async def chat_status():
                     "online": True,
                     "provider": "Ollama (Local Llama Brain)",
                     "active_model": preferred,
+                    "status_label": "Local RTX 3050 Online",
                     "available_models": raw_models,
                     "hardware": "NVIDIA RTX 3050 GPU"
                 }
     except Exception:
         pass
 
+    # Cloud-ready Smart Knowledge Base Assistant fallback
     return {
-        "online": False,
-        "provider": "Ollama (Offline)",
-        "active_model": "my-brain",
-        "available_models": [],
-        "message": "Local Llama server is offline. Run 'ollama serve' to activate."
+        "online": True,
+        "provider": "Knowledge Engine (Cloud Ready)",
+        "active_model": "everything-ai-v1",
+        "status_label": "AI Assistant Online",
+        "hardware": "Cloud / Knowledge Base"
     }
 
 
-@app.post("/api/chat", summary="Chat With Llama Brain", operation_id="chat_with_llama_api_chat_post")
+@app.post("/api/chat", summary="Chat With AI Brain", operation_id="chat_with_llama_api_chat_post")
 async def chat_with_llama(req: ChatRequest):
     """
-    Interactive chat endpoint powered by local Llama brain (my-brain / llama3.2).
-    Supports Server-Sent Events (SSE) streaming or standard JSON response.
+    Interactive chat endpoint with multi-tier engine:
+    1. Groq Cloud Llama 3.3 (ultra-fast, 24/7 cloud execution)
+    2. Local Ollama (RTX 3050 GPU)
+    3. Smart Knowledge Engine (portfolio-grounded streaming fallback)
     """
+    groq_key = os.environ.get("GROQ_API_KEY", "").strip()
+    groq_model = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile").strip()
     model_name = req.model or "my-brain"
 
     # Assemble messages with system prompt
     formatted_messages = [{"role": "system", "content": LLAMA_SYSTEM_PROMPT}]
+    last_user_query = "What services do you offer?"
     for msg in req.messages:
         if msg.role != "system":
             formatted_messages.append({"role": msg.role, "content": msg.content})
+            if msg.role == "user":
+                last_user_query = msg.content
 
     if req.stream:
         async def event_generator():
+            # Tier 1: Groq Cloud Llama 3.3
+            if groq_key:
+                try:
+                    headers = {
+                        "Authorization": f"Bearer {groq_key}",
+                        "Content-Type": "application/json"
+                    }
+                    payload = {
+                        "model": groq_model,
+                        "messages": formatted_messages,
+                        "temperature": 0.7,
+                        "max_tokens": 1024,
+                        "stream": True
+                    }
+                    async with httpx.AsyncClient(timeout=60.0) as client:
+                        async with client.stream(
+                            "POST",
+                            "https://api.groq.com/openai/v1/chat/completions",
+                            headers=headers,
+                            json=payload
+                        ) as response:
+                            if response.status_code == 200:
+                                async for line in response.aiter_lines():
+                                    if not line:
+                                        continue
+                                    if line.startswith("data: "):
+                                        data_str = line[6:].strip()
+                                        if data_str == "[DONE]":
+                                            yield f"data: {json.dumps({'content': '', 'done': True})}\n\n"
+                                            return
+                                        try:
+                                            chunk = json.loads(data_str)
+                                            delta = chunk.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                                            if delta:
+                                                yield f"data: {json.dumps({'content': delta, 'done': False})}\n\n"
+                                        except Exception:
+                                            continue
+                                return
+                except Exception:
+                    pass
+
+            # Tier 2: Local Ollama (RTX 3050 GPU)
             try:
-                async with httpx.AsyncClient(timeout=90.0) as client:
+                async with httpx.AsyncClient(timeout=10.0) as client:
                     async with client.stream(
                         "POST",
                         f"{OLLAMA_BASE_URL}/api/chat",
@@ -456,34 +640,31 @@ async def chat_with_llama(req: ChatRequest):
                             }
                         }
                     ) as response:
-                        if response.status_code != 200:
-                            err_text = await response.aread()
-                            # If my-brain failed, attempt fallback to llama3.2
-                            if model_name != "llama3.2":
-                                fallback_chunk = f"*(Notice: Falling back to llama3.2)*\n\n"
-                                yield f"data: {json.dumps({'content': fallback_chunk, 'done': False})}\n\n"
-                            else:
-                                yield f"data: {json.dumps({'content': f'⚠️ Ollama error: {err_text.decode()}', 'done': True})}\n\n"
-                                return
+                        if response.status_code == 200:
+                            async for line in response.aiter_lines():
+                                if not line:
+                                    continue
+                                try:
+                                    chunk = json.loads(line)
+                                    content = chunk.get("message", {}).get("content", "")
+                                    is_done = chunk.get("done", False)
+                                    yield f"data: {json.dumps({'content': content, 'done': is_done})}\n\n"
+                                    if is_done:
+                                        return
+                                except Exception:
+                                    continue
+                            return
+            except Exception:
+                pass
 
-                        async for line in response.aiter_lines():
-                            if not line:
-                                continue
-                            try:
-                                chunk = json.loads(line)
-                                content = chunk.get("message", {}).get("content", "")
-                                is_done = chunk.get("done", False)
-                                yield f"data: {json.dumps({'content': content, 'done': is_done})}\n\n"
-                                if is_done:
-                                    break
-                            except Exception:
-                                continue
-            except Exception as e:
-                error_msg = (
-                    f"⚠️ Could not connect to local Llama Brain ({str(e)}). "
-                    "Please ensure Ollama is running (`ollama serve`) with `my-brain` or `llama3.2` model."
-                )
-                yield f"data: {json.dumps({'content': error_msg, 'done': True})}\n\n"
+            # Tier 3: Built-in Smart Knowledge Engine Streaming Fallback
+            smart_reply = get_smart_knowledge_response(last_user_query, formatted_messages)
+            words = smart_reply.split(" ")
+            for i, word in enumerate(words):
+                suffix = " " if i < len(words) - 1 else ""
+                yield f"data: {json.dumps({'content': word + suffix, 'done': False})}\n\n"
+                await asyncio.sleep(0.012)
+            yield f"data: {json.dumps({'content': '', 'done': True})}\n\n"
 
         return StreamingResponse(
             event_generator(),
@@ -496,37 +677,31 @@ async def chat_with_llama(req: ChatRequest):
         )
     else:
         # Non-streaming JSON response
+        if groq_key:
+            try:
+                headers = {"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"}
+                payload = {"model": groq_model, "messages": formatted_messages, "temperature": 0.7, "max_tokens": 1024}
+                async with httpx.AsyncClient(timeout=60.0) as client:
+                    resp = await client.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        reply = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                        return {"success": True, "message": reply, "model": groq_model}
+            except Exception:
+                pass
+
         try:
-            async with httpx.AsyncClient(timeout=90.0) as client:
-                resp = await client.post(
-                    f"{OLLAMA_BASE_URL}/api/chat",
-                    json={
-                        "model": model_name,
-                        "messages": formatted_messages,
-                        "stream": False
-                    }
-                )
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                resp = await client.post(f"{OLLAMA_BASE_URL}/api/chat", json={"model": model_name, "messages": formatted_messages, "stream": False})
                 if resp.status_code == 200:
                     data = resp.json()
-                    return {
-                        "success": True,
-                        "message": data.get("message", {}).get("content", ""),
-                        "model": model_name
-                    }
-                else:
-                    return JSONResponse(
-                        status_code=resp.status_code,
-                        content={"success": False, "error": resp.text}
-                    )
-        except Exception as e:
-            return JSONResponse(
-                status_code=503,
-                content={
-                    "success": False,
-                    "error": f"Llama Brain unavailable: {str(e)}",
-                    "fallback_message": "Local Llama Brain is offline. Please launch `ollama serve`."
-                }
-            )
+                    return {"success": True, "message": data.get("message", {}).get("content", ""), "model": model_name}
+        except Exception:
+            pass
+
+        smart_reply = get_smart_knowledge_response(last_user_query, formatted_messages)
+        return {"success": True, "message": smart_reply, "model": "everything-ai-v1"}
+
 
 
 def find_available_port(preferred_port: int = 8000) -> int:

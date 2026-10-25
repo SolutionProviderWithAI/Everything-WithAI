@@ -509,9 +509,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.online) {
                         activeModel = data.active_model || 'my-brain';
                         if (modelBadge) modelBadge.textContent = activeModel;
-                        if (statusText) statusText.textContent = 'Local RTX 3050 Online';
+                        if (statusText) statusText.textContent = data.status_label || (data.hardware ? data.hardware + ' Online' : 'AI Online');
                     } else {
-                        if (statusText) statusText.textContent = 'Offline (Launch Ollama)';
+                        if (statusText) statusText.textContent = data.status_label || 'Offline';
                     }
                 }
             } catch (e) {
@@ -531,10 +531,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="h-6 w-6 rounded-md bg-accent-600/30 flex items-center justify-center text-accent-300">
                             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
                         </div>
-                        <span class="font-bold text-white text-xs">Jarvis • Llama Brain</span>
+                        <span class="font-bold text-white text-xs">Jarvis • AI Architecture Brain</span>
                     </div>
                     <div class="chat-content text-gray-200">
-                        <p>Hello! I am <strong>Jarvis</strong>, running privately on your local <strong>NVIDIA RTX 3050</strong> via Llama 3.2.</p>
+                        <p>Hello! I am <strong>Jarvis</strong>, your AI Architecture & Integration Assistant for <strong>EverythingWithAI</strong>.</p>
                         <p class="mt-2 text-xs text-gray-400">Ask me about:</p>
                         <ul class="text-xs text-gray-300 mt-1 space-y-1">
                             <li>• Integrating ChatGPT & LLMs with existing .NET apps</li>
