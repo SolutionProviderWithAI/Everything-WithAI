@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 if sys.platform == "win32":
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -332,7 +332,8 @@ async def health_check():
     personal = portfolio_data.get("personal", {})
     return {
         "status": "healthy",
-        "app": "sujit-portfolio",
+        "app": "EverythingWithAI",
+        "version": "1.0.0",
         "developer": personal.get("name", "Sujit"),
         "role": personal.get("role", "Senior .NET Software Developer"),
         "availability": personal.get("availability", "Open")
