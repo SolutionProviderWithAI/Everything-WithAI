@@ -316,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initLlamaChat() {
         const triggerBtn = document.getElementById('llama-chat-trigger');
+        const triggerContainer = document.getElementById('llama-chat-trigger-container');
         const chatWindow = document.getElementById('llama-chat-window');
         const closeBtn = document.getElementById('llama-chat-close');
         const clearBtn = document.getElementById('llama-chat-clear');
@@ -337,8 +338,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedChat = sessionStorage.getItem('llama_chat_history');
         if (savedChat) {
             try {
-                conversationHistory = JSON.parse(savedChat);
-                renderAllMessages();
+                const parsed = JSON.parse(savedChat);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    conversationHistory = parsed;
+                    renderAllMessages();
+                } else {
+                    renderWelcomeMessage();
+                }
             } catch (e) {
                 conversationHistory = [];
                 renderWelcomeMessage();
@@ -352,20 +358,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Toggle Chat Window
         triggerBtn.addEventListener('click', () => {
-            const isHidden = chatWindow.classList.contains('hidden');
-            if (isHidden) {
-                chatWindow.classList.remove('hidden');
-                chatWindow.classList.add('flex');
-                setTimeout(() => chatInput && chatInput.focus(), 100);
-            } else {
-                chatWindow.classList.add('hidden');
-                chatWindow.classList.remove('flex');
-            }
+            chatWindow.classList.remove('hidden');
+            chatWindow.classList.add('flex');
+            if (triggerContainer) triggerContainer.classList.add('hidden');
+            setTimeout(() => chatInput && chatInput.focus(), 100);
         });
 
         closeBtn.addEventListener('click', () => {
             chatWindow.classList.add('hidden');
             chatWindow.classList.remove('flex');
+            if (triggerContainer) triggerContainer.classList.remove('hidden');
         });
 
         clearBtn.addEventListener('click', () => {
@@ -375,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderWelcomeMessage();
         });
 
-        // Textarea auto-resize & input events
+        // Textarea auto-resize
         chatInput.addEventListener('input', () => {
             chatInput.style.height = 'auto';
             chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
@@ -385,31 +387,36 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                if (!sendBtn.disabled) {
-                    chatForm.dispatchEvent(new Event('submit'));
-                }
+                sendMessage(chatInput.value.trim());
             }
+        });
+
+        // Form submit & Send button click
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            sendMessage(chatInput.value.trim());
+        });
+
+        sendBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sendMessage(chatInput.value.trim());
         });
 
         // Quick Suggestions
         suggestionBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
                 if (isGenerating) return;
                 const prompt = btn.textContent.replace(/^[^a-zA-Z0-9]+/, '').trim();
-                chatInput.value = prompt;
-                chatInput.style.height = 'auto';
-                sendBtn.disabled = false;
-                chatForm.dispatchEvent(new Event('submit'));
+                sendMessage(prompt);
             });
         });
 
-        // Submit message
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = chatInput.value.trim();
+        // Core Send Message function
+        async function sendMessage(text) {
             if (!text || isGenerating) return;
 
-            // Append User Message
+            // Append User Message to UI & history
             const userMsg = { role: 'user', content: text };
             conversationHistory.push(userMsg);
             saveHistory();
@@ -426,6 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isGenerating = true;
 
             try {
+                // Try streaming request first
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -437,21 +445,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
+                    throw new Error(`Server returned ${response.status}`);
                 }
 
-                // Stream response handling
+                // If browser doesn't support streaming reader, fallback to json
+                if (!response.body || !response.body.getReader) {
+                    const fallbackResp = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            messages: conversationHistory,
+                            model: activeModel,
+                            stream: false
+                        })
+                    });
+                    const data = await fallbackResp.json();
+                    const fullReply = data.message || 'No response received.';
+                    contentDiv.innerHTML = formatMarkdown(fullReply);
+                    conversationHistory.push({ role: 'assistant', content: fullReply });
+                    saveHistory();
+                    return;
+                }
+
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
                 let fullReply = '';
                 let isFirstChunk = true;
+                let buffer = '';
 
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
 
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n');
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // keep trailing partial line
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
@@ -461,7 +489,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const parsed = JSON.parse(rawJson);
                                 if (parsed.content) {
                                     if (isFirstChunk) {
-                                        // Remove typing indicator on first word
                                         contentDiv.innerHTML = '';
                                         isFirstChunk = false;
                                     }
@@ -469,15 +496,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                     contentDiv.innerHTML = formatMarkdown(fullReply);
                                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                                 }
-                            } catch (err) {
-                                // non-json line or partial
+                            } catch (e) {
+                                // ignore partial JSON
                             }
                         }
                     }
                 }
 
                 if (!fullReply) {
-                    fullReply = 'I apologize, but no response was generated. Please verify that Ollama is running locally.';
+                    // Try fallback
+                    const fallbackResp = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            messages: conversationHistory,
+                            model: activeModel,
+                            stream: false
+                        })
+                    });
+                    const data = await fallbackResp.json();
+                    fullReply = data.message || 'Thank you for reaching out! How else can I assist with your project?';
                     contentDiv.innerHTML = formatMarkdown(fullReply);
                 }
 
@@ -485,20 +523,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveHistory();
 
             } catch (err) {
-                console.error('Chat error:', err);
-                contentDiv.innerHTML = `
-                    <div class="text-red-400 text-xs">
-                        <p class="font-bold">⚠️ Connection Issue</p>
-                        <p class="mt-1">Unable to communicate with local Llama Brain. Please verify that Ollama is running (<code>ollama serve</code>) with model <code>${activeModel}</code>.</p>
-                    </div>
-                `;
+                console.warn('Streaming fetch failed, falling back to JSON:', err);
+                try {
+                    const fallbackResp = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            messages: conversationHistory,
+                            model: activeModel,
+                            stream: false
+                        })
+                    });
+                    const data = await fallbackResp.json();
+                    if (data.message) {
+                        contentDiv.innerHTML = formatMarkdown(data.message);
+                        conversationHistory.push({ role: 'assistant', content: data.message });
+                        saveHistory();
+                    } else {
+                        throw new Error('Fallback returned empty');
+                    }
+                } catch (fallbackErr) {
+                    contentDiv.innerHTML = `
+                        <div class="text-red-400 text-xs">
+                            <p class="font-bold">⚠️ Connection Notice</p>
+                            <p class="mt-1">Unable to complete request. Please verify internet connectivity or refresh the page.</p>
+                        </div>
+                    `;
+                }
             } finally {
                 isGenerating = false;
                 sendBtn.disabled = !chatInput.value.trim();
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 if (window.lucide) window.lucide.createIcons();
             }
-        });
+        }
 
         // ----------------- Helpers -----------------
         async function checkEngineStatus() {
@@ -507,7 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     const data = await res.json();
                     if (data.online) {
-                        activeModel = data.active_model || 'my-brain';
+                        activeModel = data.active_model || 'llama-3.3';
                         if (modelBadge) modelBadge.textContent = activeModel;
                         if (statusText) statusText.textContent = data.status_label || (data.hardware ? data.hardware + ' Online' : 'AI Online');
                     } else {
@@ -520,7 +578,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function saveHistory() {
-            sessionStorage.setItem('llama_chat_history', JSON.stringify(conversationHistory));
+            try {
+                sessionStorage.setItem('llama_chat_history', JSON.stringify(conversationHistory));
+            } catch (e) {}
         }
 
         function renderWelcomeMessage() {

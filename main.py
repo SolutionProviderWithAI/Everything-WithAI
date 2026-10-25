@@ -597,7 +597,7 @@ async def chat_with_llama(req: ChatRequest):
                         "max_tokens": 1024,
                         "stream": True
                     }
-                    async with httpx.AsyncClient(timeout=60.0) as client:
+                    async with httpx.AsyncClient(timeout=30.0) as client:
                         async with client.stream(
                             "POST",
                             "https://api.groq.com/openai/v1/chat/completions",
@@ -621,12 +621,16 @@ async def chat_with_llama(req: ChatRequest):
                                         except Exception:
                                             continue
                                 return
+                            else:
+                                # Groq returned error (e.g. 401 invalid key or 429 quota)
+                                # Skip to Tier 3 smart fallback immediately on cloud
+                                pass
                 except Exception:
                     pass
 
             # Tier 2: Local Ollama (RTX 3050 GPU)
             try:
-                async with httpx.AsyncClient(timeout=10.0) as client:
+                async with httpx.AsyncClient(timeout=1.5) as client:
                     async with client.stream(
                         "POST",
                         f"{OLLAMA_BASE_URL}/api/chat",
@@ -691,7 +695,7 @@ async def chat_with_llama(req: ChatRequest):
                 pass
 
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=1.5) as client:
                 resp = await client.post(f"{OLLAMA_BASE_URL}/api/chat", json={"model": model_name, "messages": formatted_messages, "stream": False})
                 if resp.status_code == 200:
                     data = resp.json()

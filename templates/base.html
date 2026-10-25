@@ -320,7 +320,7 @@
         </div>
 
         <!-- Input Bar -->
-        <form id="llama-chat-form" class="p-3 bg-ink-900/90 border-t border-ink-600/60 flex items-center gap-2 shrink-0">
+        <form id="llama-chat-form" onsubmit="return false;" class="p-3 bg-ink-900/90 border-t border-ink-600/60 flex items-center gap-2 shrink-0">
             <textarea id="llama-chat-input" rows="1" placeholder="Ask Jarvis anything about AI & .NET..." class="flex-1 bg-ink-800/80 border border-ink-600/60 rounded-xl px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500/50 resize-none max-h-32 transition-colors"></textarea>
             <button id="llama-chat-send" type="submit" disabled class="h-10 w-10 flex items-center justify-center rounded-xl bg-accent-600 hover:bg-accent-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shrink-0">
                 <i data-lucide="send" class="w-4 h-4"></i>
@@ -329,7 +329,7 @@
     </div>
 
     <!-- Client Script -->
-    <script src="/static/js/script.js"></script>
+    <script src="/static/js/script.js?v=2.0.0"></script>
     <script>
         // Render lucide icons
         if (window.lucide) {
