@@ -1,3 +1,11 @@
+import sys
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 """
 EverythingWithAI
 Full-stack FastAPI Application serving dynamic portfolio, AI Architecture Advisor,
@@ -520,7 +528,32 @@ async def chat_with_llama(req: ChatRequest):
             )
 
 
-if __name__ == "__main__":
+def find_available_port(preferred_port: int = 8000) -> int:
+    import socket
+    ports_to_test = [preferred_port, 8080, 8001, 8000, 5000, 3000]
+    for p in ports_to_test:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(('0.0.0.0', p))
+                return p
+        except OSError:
+            continue
+    return preferred_port
+
+
+if __name__ == '__main__':
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    preferred = int(os.environ.get('PORT', 8000))
+    port = find_available_port(preferred)
+
+    print("\n" + "=" * 60)
+    print("  [OK] EverythingWithAI Server Launching...")
+    if port != preferred:
+        print(f"  [NOTICE] Port {preferred} was in use or locked by Windows.")
+        print(f"  --> Automatically bound to open port: {port}")
+    print(f"  >> URL: http://localhost:{port}")
+    print(f"  >> Swagger API Docs: http://localhost:{port}/docs")
+    print("  >> Local Llama Brain: Connected via Ollama")
+    print("=" * 60 + "\n")
+
+    uvicorn.run('main:app', host='0.0.0.0', port=port, reload=True)
