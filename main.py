@@ -12,9 +12,10 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import httpx
 from pydantic import BaseModel, Field
 
 # -----------------------------------------------------------------------------
@@ -100,6 +101,20 @@ class AIAdvisorResponse(BaseModel):
     feasibility_score: int = Field(..., description="Feasibility score out of 100")
     estimated_timeline: str = Field(..., description="Estimated timeline")
     pro_tip: str = Field(..., description="Implementation pro-tip")
+
+class ChatMessage(BaseModel):
+    role: str = Field(..., description="Role: 'user', 'assistant', or 'system'")
+    content: str = Field(..., description="Message text content")
+
+class ChatRequest(BaseModel):
+    messages: List[ChatMessage] = Field(..., description="Chat message history")
+    model: Optional[str] = Field("my-brain", description="Ollama model name (my-brain or llama3.2)")
+    stream: Optional[bool] = Field(True, description="Whether to stream the response via SSE")
+
+class ChatResponse(BaseModel):
+    success: bool = Field(..., description="Success flag")
+    message: str = Field(..., description="Assistant reply")
+    model: str = Field(..., description="Model used")
 
 # -----------------------------------------------------------------------------
 # 5. FastAPI Application Instance
@@ -340,6 +355,169 @@ async def get_portfolio_data():
     Raw JSON API providing all portfolio structured data.
     """
     return portfolio_data
+
+
+# -----------------------------------------------------------------------------
+# 7. Llama Brain Chat Endpoints (Ollama / Local RTX 3050)
+# -----------------------------------------------------------------------------
+OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+
+LLAMA_SYSTEM_PROMPT = """You are Jarvis, the intelligent AI assistant and local Llama Brain for EverythingWithAI (https://everything-withai.onrender.com/).
+You run locally on an NVIDIA RTX 3050 GPU using Meta's Llama 3.2 model.
+You assist developers, engineering leads, and business owners looking to integrate modern AI into their applications.
+
+Knowledge Base:
+- Developer & Founder: Sujit — Senior .NET Software Developer & AI/LLM Integration Specialist (15+ years of enterprise software engineering).
+- Core Services:
+  1. ChatGPT & LLM Integration (OpenAI, Claude, Llama, Ollama, API orchestration)
+  2. Autonomous AI Agents (function calling, API tools, multi-step background workflow automation)
+  3. Enterprise RAG Applications (Vector databases, ChromaDB, pgvector, Azure AI Search, secure semantic retrieval without data leakage)
+  4. Voice AI (WebRTC, real-time telephony, sub-second latency speech processing)
+  5. Enterprise Modernization (Infusing modern AI intelligence into existing C#, ASP.NET Core, and legacy systems without costly rebuilds)
+- Core philosophy: "AI Doesn't Always Mean Rebuilding Your Application." Connect modern AI to existing databases (SQL Server, Oracle, PostgreSQL) and existing APIs.
+- Contact: sandilya.sujit@gmail.com or via the "Discuss Project" form on the site.
+
+Behavior & Tone:
+- Professional, technical, concise, and helpful.
+- When answering technical questions, provide practical architecture patterns and clean code snippets in C# or Python when requested.
+- Keep answers engaging, structured, and easy to read with markdown.
+- If a client wants to discuss a project or request a quote, encourage them to use the "Discuss Project" form on the site or reach out to sandilya.sujit@gmail.com.
+"""
+
+
+@app.get("/api/chat/status", summary="Chat Engine Status", operation_id="chat_status_api_chat_status_get")
+async def chat_status():
+    """
+    Checks if local Llama Ollama server is running and returns available models.
+    """
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            resp = await client.get(f"{OLLAMA_BASE_URL}/api/tags")
+            if resp.status_code == 200:
+                data = resp.json()
+                raw_models = [m.get("name") for m in data.get("models", [])]
+                preferred = "my-brain" if any("my-brain" in m for m in raw_models) else ("llama3.2" if raw_models else "llama3.2")
+                return {
+                    "online": True,
+                    "provider": "Ollama (Local Llama Brain)",
+                    "active_model": preferred,
+                    "available_models": raw_models,
+                    "hardware": "NVIDIA RTX 3050 GPU"
+                }
+    except Exception:
+        pass
+
+    return {
+        "online": False,
+        "provider": "Ollama (Offline)",
+        "active_model": "my-brain",
+        "available_models": [],
+        "message": "Local Llama server is offline. Run 'ollama serve' to activate."
+    }
+
+
+@app.post("/api/chat", summary="Chat With Llama Brain", operation_id="chat_with_llama_api_chat_post")
+async def chat_with_llama(req: ChatRequest):
+    """
+    Interactive chat endpoint powered by local Llama brain (my-brain / llama3.2).
+    Supports Server-Sent Events (SSE) streaming or standard JSON response.
+    """
+    model_name = req.model or "my-brain"
+
+    # Assemble messages with system prompt
+    formatted_messages = [{"role": "system", "content": LLAMA_SYSTEM_PROMPT}]
+    for msg in req.messages:
+        if msg.role != "system":
+            formatted_messages.append({"role": msg.role, "content": msg.content})
+
+    if req.stream:
+        async def event_generator():
+            try:
+                async with httpx.AsyncClient(timeout=90.0) as client:
+                    async with client.stream(
+                        "POST",
+                        f"{OLLAMA_BASE_URL}/api/chat",
+                        json={
+                            "model": model_name,
+                            "messages": formatted_messages,
+                            "stream": True,
+                            "options": {
+                                "temperature": 0.7,
+                                "top_p": 0.9
+                            }
+                        }
+                    ) as response:
+                        if response.status_code != 200:
+                            err_text = await response.aread()
+                            # If my-brain failed, attempt fallback to llama3.2
+                            if model_name != "llama3.2":
+                                fallback_chunk = f"*(Notice: Falling back to llama3.2)*\n\n"
+                                yield f"data: {json.dumps({'content': fallback_chunk, 'done': False})}\n\n"
+                            else:
+                                yield f"data: {json.dumps({'content': f'⚠️ Ollama error: {err_text.decode()}', 'done': True})}\n\n"
+                                return
+
+                        async for line in response.aiter_lines():
+                            if not line:
+                                continue
+                            try:
+                                chunk = json.loads(line)
+                                content = chunk.get("message", {}).get("content", "")
+                                is_done = chunk.get("done", False)
+                                yield f"data: {json.dumps({'content': content, 'done': is_done})}\n\n"
+                                if is_done:
+                                    break
+                            except Exception:
+                                continue
+            except Exception as e:
+                error_msg = (
+                    f"⚠️ Could not connect to local Llama Brain ({str(e)}). "
+                    "Please ensure Ollama is running (`ollama serve`) with `my-brain` or `llama3.2` model."
+                )
+                yield f"data: {json.dumps({'content': error_msg, 'done': True})}\n\n"
+
+        return StreamingResponse(
+            event_generator(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no"
+            }
+        )
+    else:
+        # Non-streaming JSON response
+        try:
+            async with httpx.AsyncClient(timeout=90.0) as client:
+                resp = await client.post(
+                    f"{OLLAMA_BASE_URL}/api/chat",
+                    json={
+                        "model": model_name,
+                        "messages": formatted_messages,
+                        "stream": False
+                    }
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    return {
+                        "success": True,
+                        "message": data.get("message", {}).get("content", ""),
+                        "model": model_name
+                    }
+                else:
+                    return JSONResponse(
+                        status_code=resp.status_code,
+                        content={"success": False, "error": resp.text}
+                    )
+        except Exception as e:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "success": False,
+                    "error": f"Llama Brain unavailable: {str(e)}",
+                    "fallback_message": "Local Llama Brain is offline. Please launch `ollama serve`."
+                }
+            )
 
 
 if __name__ == "__main__":

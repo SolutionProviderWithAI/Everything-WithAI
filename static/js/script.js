@@ -309,6 +309,333 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // -------------------------------------------------------------
+    // 6. Llama Brain Interactive Chat Widget
+    // -------------------------------------------------------------
+    initLlamaChat();
+
+    function initLlamaChat() {
+        const triggerBtn = document.getElementById('llama-chat-trigger');
+        const chatWindow = document.getElementById('llama-chat-window');
+        const closeBtn = document.getElementById('llama-chat-close');
+        const clearBtn = document.getElementById('llama-chat-clear');
+        const chatForm = document.getElementById('llama-chat-form');
+        const chatInput = document.getElementById('llama-chat-input');
+        const sendBtn = document.getElementById('llama-chat-send');
+        const messagesContainer = document.getElementById('llama-chat-messages');
+        const statusText = document.getElementById('llama-status-text');
+        const modelBadge = document.getElementById('llama-model-badge');
+        const suggestionBtns = document.querySelectorAll('.llama-suggest-btn');
+
+        if (!triggerBtn || !chatWindow) return;
+
+        let conversationHistory = [];
+        let isGenerating = false;
+        let activeModel = 'my-brain';
+
+        // Load persisted conversation or show initial greeting
+        const savedChat = sessionStorage.getItem('llama_chat_history');
+        if (savedChat) {
+            try {
+                conversationHistory = JSON.parse(savedChat);
+                renderAllMessages();
+            } catch (e) {
+                conversationHistory = [];
+                renderWelcomeMessage();
+            }
+        } else {
+            renderWelcomeMessage();
+        }
+
+        // Fetch engine status
+        checkEngineStatus();
+
+        // Toggle Chat Window
+        triggerBtn.addEventListener('click', () => {
+            const isHidden = chatWindow.classList.contains('hidden');
+            if (isHidden) {
+                chatWindow.classList.remove('hidden');
+                chatWindow.classList.add('flex');
+                setTimeout(() => chatInput && chatInput.focus(), 100);
+            } else {
+                chatWindow.classList.add('hidden');
+                chatWindow.classList.remove('flex');
+            }
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+            chatWindow.classList.remove('flex');
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (isGenerating) return;
+            conversationHistory = [];
+            sessionStorage.removeItem('llama_chat_history');
+            renderWelcomeMessage();
+        });
+
+        // Textarea auto-resize & input events
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+            sendBtn.disabled = !chatInput.value.trim() || isGenerating;
+        });
+
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendBtn.disabled) {
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
+        // Quick Suggestions
+        suggestionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isGenerating) return;
+                const prompt = btn.textContent.replace(/^[^a-zA-Z0-9]+/, '').trim();
+                chatInput.value = prompt;
+                chatInput.style.height = 'auto';
+                sendBtn.disabled = false;
+                chatForm.dispatchEvent(new Event('submit'));
+            });
+        });
+
+        // Submit message
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text || isGenerating) return;
+
+            // Append User Message
+            const userMsg = { role: 'user', content: text };
+            conversationHistory.push(userMsg);
+            saveHistory();
+
+            appendMessageUI('user', text);
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            // Prepare Assistant Placeholder Bubble
+            const assistantBubble = appendMessageUI('assistant', '', true);
+            const contentDiv = assistantBubble.querySelector('.chat-content');
+
+            isGenerating = true;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: conversationHistory,
+                        model: activeModel,
+                        stream: true
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
+                // Stream response handling
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let fullReply = '';
+                let isFirstChunk = true;
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const rawJson = line.substring(6).trim();
+                            if (!rawJson) continue;
+                            try {
+                                const parsed = JSON.parse(rawJson);
+                                if (parsed.content) {
+                                    if (isFirstChunk) {
+                                        // Remove typing indicator on first word
+                                        contentDiv.innerHTML = '';
+                                        isFirstChunk = false;
+                                    }
+                                    fullReply += parsed.content;
+                                    contentDiv.innerHTML = formatMarkdown(fullReply);
+                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                }
+                            } catch (err) {
+                                // non-json line or partial
+                            }
+                        }
+                    }
+                }
+
+                if (!fullReply) {
+                    fullReply = 'I apologize, but no response was generated. Please verify that Ollama is running locally.';
+                    contentDiv.innerHTML = formatMarkdown(fullReply);
+                }
+
+                conversationHistory.push({ role: 'assistant', content: fullReply });
+                saveHistory();
+
+            } catch (err) {
+                console.error('Chat error:', err);
+                contentDiv.innerHTML = `
+                    <div class="text-red-400 text-xs">
+                        <p class="font-bold">⚠️ Connection Issue</p>
+                        <p class="mt-1">Unable to communicate with local Llama Brain. Please verify that Ollama is running (<code>ollama serve</code>) with model <code>${activeModel}</code>.</p>
+                    </div>
+                `;
+            } finally {
+                isGenerating = false;
+                sendBtn.disabled = !chatInput.value.trim();
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                if (window.lucide) window.lucide.createIcons();
+            }
+        });
+
+        // ----------------- Helpers -----------------
+        async function checkEngineStatus() {
+            try {
+                const res = await fetch('/api/chat/status');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.online) {
+                        activeModel = data.active_model || 'my-brain';
+                        if (modelBadge) modelBadge.textContent = activeModel;
+                        if (statusText) statusText.textContent = 'Local RTX 3050 Online';
+                    } else {
+                        if (statusText) statusText.textContent = 'Offline (Launch Ollama)';
+                    }
+                }
+            } catch (e) {
+                if (statusText) statusText.textContent = 'Connecting...';
+            }
+        }
+
+        function saveHistory() {
+            sessionStorage.setItem('llama_chat_history', JSON.stringify(conversationHistory));
+        }
+
+        function renderWelcomeMessage() {
+            messagesContainer.innerHTML = '';
+            const welcomeHtml = `
+                <div class="chat-bubble-assistant p-4 text-sm">
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-ink-700/50">
+                        <div class="h-6 w-6 rounded-md bg-accent-600/30 flex items-center justify-center text-accent-300">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="font-bold text-white text-xs">Jarvis • Llama Brain</span>
+                    </div>
+                    <div class="chat-content text-gray-200">
+                        <p>Hello! I am <strong>Jarvis</strong>, running privately on your local <strong>NVIDIA RTX 3050</strong> via Llama 3.2.</p>
+                        <p class="mt-2 text-xs text-gray-400">Ask me about:</p>
+                        <ul class="text-xs text-gray-300 mt-1 space-y-1">
+                            <li>• Integrating ChatGPT & LLMs with existing .NET apps</li>
+                            <li>• Building RAG pipelines with SQL Server or vector DBs</li>
+                            <li>• Developing autonomous AI Agents with API tool-calling</li>
+                            <li>• Estimating project feasibility and timelines</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            messagesContainer.innerHTML = welcomeHtml;
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function renderAllMessages() {
+            messagesContainer.innerHTML = '';
+            renderWelcomeMessage();
+            conversationHistory.forEach(msg => {
+                if (msg.role !== 'system') {
+                    appendMessageUI(msg.role, msg.content, false);
+                }
+            });
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function appendMessageUI(role, content, isStreaming = false) {
+            const isUser = role === 'user';
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = `${isUser ? 'chat-bubble-user ml-12' : 'chat-bubble-assistant mr-6'} p-3.5 max-w-[85%]`;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'chat-content';
+
+            if (isStreaming) {
+                contentDiv.innerHTML = `
+                    <div class="chat-typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                `;
+            } else {
+                contentDiv.innerHTML = formatMarkdown(content);
+            }
+
+            bubble.appendChild(contentDiv);
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            if (window.lucide) window.lucide.createIcons();
+            return bubble;
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+
+            // Escape HTML tags to prevent XSS
+            let safe = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Code blocks with syntax highlighting & copy button
+            safe = safe.replace(/```([a-zA-Z0-9_\-\.]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                return `
+                    <div class="relative my-2">
+                        <button type="button" class="chat-copy-code-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy', 1500)">Copy</button>
+                        <pre><code>${code.trim()}</code></pre>
+                    </div>
+                `;
+            });
+
+            // Inline code
+            safe = safe.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Bold
+            safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+            // Italic
+            safe = safe.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+            // Linebreaks to paragraphs
+            const paragraphs = safe.split(/\n\n+/);
+            return paragraphs.map(p => {
+                p = p.trim();
+                if (!p) return '';
+                if (p.startsWith('<div class="relative') || p.startsWith('<pre')) {
+                    return p;
+                }
+                // Bullet points
+                if (p.includes('\n- ') || p.startsWith('- ')) {
+                    const items = p.split('\n- ').map(item => item.replace(/^- /, ''));
+                    return `<ul>${items.map(it => `<li>${it.replace(/\n/g, '<br>')}</li>`).join('')}</ul>`;
+                }
+                return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+            }).join('');
+        }
+    }
+
     // Initialize Lucide icons if available
     if (window.lucide) {
         window.lucide.createIcons();

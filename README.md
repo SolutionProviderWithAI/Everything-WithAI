@@ -11,6 +11,7 @@ Live URL: [https://everything-withai.onrender.com/](https://everything-withai.on
 - **Modern Cyber & Dark UI**: Crafted with responsive Tailwind CSS, custom glowing ambient backdrop, JetBrains Mono & Inter typography, and Lucide icons.
 - **Full-Stack Architecture**: Powered by **FastAPI (Python)** with Jinja2 server-side rendering, SQLite database persistence, and RESTful APIs.
 - **Interactive AI Architecture Advisor**: Dynamic feasibility advisor tool that analyzes a client's existing stack (.NET, Python, Java, Node.js), database (SQL Server, Oracle, PostgreSQL), and target use case (RAG, Agents, Voice AI) to output custom architecture blueprints, timeline estimates, and feasibility scores.
+- **Llama Brain AI Chat Assistant**: Interactive AI chat widget powered by local **Meta Llama 3.2** (`my-brain` / `llama3.2`) running on local NVIDIA GPU via Ollama, featuring real-time Server-Sent Events (SSE) streaming, markdown formatting, syntax highlighted code blocks with one-click copy, and persistent conversation history.
 - **AJAX Project Inquiry System**: Client contact form with real-time field validation, asynchronous submission, and persistent database storage.
 - **Client Inquiries Dashboard**: `/requests` administrative view and `/api/submissions` JSON endpoint for tracking received project inquiries.
 - **Standalone Static & Cloud Ready**: Fully operational as a standalone static site (`index.html`) or as a containerized FastAPI application with included `Dockerfile` and `render.yaml`.
@@ -104,6 +105,8 @@ npx serve .
 | `POST` | `/api/advisor` | Returns instant AI architecture feasibility & recommendations |
 | `GET` | `/api/submissions` | JSON endpoint returning all recorded client requests |
 | `GET` | `/api/portfolio-data`| Structured JSON of Sujit's portfolio, solutions, and tech stack |
+| `POST` | `/api/chat` | Real-time chat endpoint with Llama Brain (supports SSE streaming) |
+| `GET` | `/api/chat/status` | Health & model discovery endpoint for local Llama Brain |
 | `GET` | `/api/health` | Health check probe returning deployment & service status |
 | `GET` | `/openapi.json` | OpenAPI 3.1.0 schema specification |
 
